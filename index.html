@@ -2,631 +2,677 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Re-Late">
-<title>Re-Late · Riesgo Cardiovascular</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a6b4a" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1b14" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Re-Late Nutrición Saludable - PWA para rehabilitación cardíaca">
+<title>Re-Late Nutrición Saludable</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
-:root{
---bg:#0f172a; --card:#1e293b; --accent:#f87171; --blue:#38bdf8; --green:#4ade80;
---amber:#fbbf24; --red:#f87171; --text:#e2e8f0; --muted:#94a3b8; --line:#334155;
-}
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-html,body{margin:0}
-body{
-font-family:"Segoe UI", system-ui, sans-serif; background:var(--bg); color:var(--text);
-padding:14px 14px calc(84px + env(safe-area-inset-bottom)); max-width:520px; margin:0 auto;
-overscroll-behavior-y:none;
-}
-header{text-align:center; padding:10px 0 16px}
-h1{margin:0; color:var(--accent); font-size:1.9rem; letter-spacing:.5px}
-h1 span{color:var(--blue)}
-.subtitle{color:var(--muted); font-size:.85rem; margin-top:4px}
-.author{font-size:.75rem; color:var(--blue); font-weight:600; margin-top:6px}
-.card{background:var(--card); border-radius:16px; padding:18px; margin-bottom:14px;
-box-shadow:0 4px 16px rgba(0,0,0,.3)}
-.card h2{margin:0 0 12px; font-size:1rem; color:var(--blue); border-bottom:2px solid var(--line); padding-bottom:8px}
-label{display:block; font-size:.8rem; font-weight:600; margin:12px 0 4px}
-input[type=number], select{
-width:100%; padding:12px; border:1px solid var(--line); border-radius:10px;
-font-size:1rem; background:#0f172a; color:var(--text);
-}
-input[type=number]:focus, select:focus{outline:none; border-color:var(--blue)}
-.row{display:flex; gap:10px}
-.row>div{flex:1}
-.check{display:flex; align-items:center; gap:10px; margin-top:14px; font-size:.95rem}
-.check input{width:24px; height:24px; accent-color:var(--accent)}
-.check label{margin:0}
-.slider-val{font-weight:700; color:var(--accent)}
-input[type=range]{width:100%; accent-color:var(--accent); height:34px}
-.btns{display:flex; gap:10px; margin-top:16px}
-button{border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer;
-padding:14px; transition:transform .1s, opacity .2s}
-button:active{transform:scale(.96)}
-.btn-calc{flex:1; background:var(--blue); color:#04121f}
-.btn-pdf{flex:1; background:var(--accent); color:#fff}
-.btn-reset{flex:0 0 84px; background:var(--line); color:var(--muted)}
-.gauge-wrap{text-align:center}
-.gauge-wrap svg{width:100%; max-width:320px}
-.score-big{font-size:2.3rem; font-weight:800; margin-top:-14px}
-.badge{display:inline-block; padding:6px 16px; border-radius:20px; color:#04121f; font-weight:800; margin-top:6px}
-.b-green{background:var(--green)} .b-amber{background:var(--amber)} .b-red{background:var(--red)}
-.desc{margin-top:12px; font-size:.88rem; color:var(--muted); line-height:1.5}
-#detalle{font-size:.9rem; line-height:2; color:var(--muted)}
-#detalle b{color:var(--text)}
-.imc-line{margin-top:10px; font-size:.9rem; color:var(--muted)}
-.imc-line b{color:var(--text)}
-.imc-tag{display:inline-block; padding:3px 12px; border-radius:14px; font-size:.78rem; font-weight:800; color:#04121f; margin-left:6px}
-.tabbar{
-position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:8px;
-padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-background:rgba(15,23,42,.92); backdrop-filter:blur(8px); border-top:1px solid var(--line); z-index:10;
-}
-.tab-btn{
-flex:1; max-width:200px; display:flex; flex-direction:column; align-items:center; gap:2px;
-padding:8px; border-radius:12px; background:transparent; color:var(--muted); font-size:.8rem; font-weight:700;
-}
-.tab-btn svg{width:24px; height:24px}
-.tab-btn.active{background:var(--blue); color:#04121f}
-.tab-content{display:none; animation:fade .25s}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--primary:#1a6b4a;--primary-light:#2d8f6b;--primary-dark:#0f4a33;--accent:#e8f5ee;--danger:#d9534f;--warning:#f0ad4e;--success:#5cb85c;--bg:#f5f7f6;--card:#fff;--text:#2c3e50;--text-light:#7f8c8d;--border:#e0e6e3;--shadow:0 2px 8px rgba(0,0,0,.08);--radius:12px;--header-grad:linear-gradient(135deg,#1a6b4a,#2d8f6b)}
+body.dark{--primary:#3fbf86;--primary-light:#5cd6a0;--primary-dark:#2a9d6a;--accent:#12301f;--bg:#0d1b14;--card:#16281f;--text:#e6ede9;--text-light:#93a89d;--border:#244234;--shadow:0 2px 10px rgba(0,0,0,.4);--header-grad:linear-gradient(135deg,#0f4a33,#1a6b4a)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:76px;transition:background .25s,color .25s}
+.app-header{background:var(--header-grad);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between}
+.app-header h1{font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.app-header .subtitle{font-size:.72rem;opacity:.85;margin-top:2px}
+.icon-btn{background:rgba(255,255,255,.15);border:none;color:#fff;width:38px;height:38px;border-radius:10px;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.icon-btn:active{transform:scale(.92)}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;justify-content:space-around;padding:6px 0;box-shadow:0 -2px 10px rgba(0,0,0,.12);z-index:100;border-top:1px solid var(--border)}
+.tab-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.6rem;color:var(--text-light);cursor:pointer;padding:5px 4px;border-radius:8px;transition:all .2s;min-width:50px}
+.tab-btn.active{color:var(--primary);background:var(--accent);font-weight:600}
+.tab-btn .tab-icon{font-size:1.25rem}
+.tab-content{display:none;padding:14px;max-width:800px;margin:0 auto;animation:fade .25s}
 .tab-content.active{display:block}
-@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1}}
-.tips-grid{display:grid; gap:12px}
-.tip-card{background:var(--card); border-radius:16px; padding:16px; display:flex; gap:14px; align-items:flex-start}
-.tip-icon{flex-shrink:0; width:52px; height:52px; border-radius:12px; display:flex; align-items:center;
-justify-content:center; background:rgba(56,189,248,.12)}
-.tip-icon svg{width:32px; height:32px}
-.tip-text h3{margin:0 0 4px; font-size:.95rem; color:var(--blue)}
-.tip-text p{margin:0; font-size:.85rem; color:var(--muted); line-height:1.5}
-.tip-text .highlight{color:var(--accent); font-weight:700}
-footer{text-align:center; color:var(--muted); font-size:.72rem; padding:8px 0 16px}
-#installBanner{
-display:none; position:fixed; left:12px; right:12px;
-bottom:calc(88px + env(safe-area-inset-bottom)); background:var(--card); border:1px solid var(--blue);
-border-radius:14px; padding:12px 14px; z-index:20; align-items:center; gap:10px;
-box-shadow:0 8px 24px rgba(0,0,0,.5); font-size:.85rem;
-}
-#installBanner button{padding:8px 14px; background:var(--blue); color:#04121f; font-size:.85rem; flex:0 0 auto}
-/* Historial */
-.hist-item{background:var(--card); border-radius:14px; padding:14px 16px; margin-bottom:10px;
-display:flex; align-items:center; gap:14px}
-.hist-dot{width:44px; height:44px; border-radius:50%; flex-shrink:0; display:flex; align-items:center;
-justify-content:center; font-weight:800; color:#04121f; font-size:1rem}
-.hist-info{flex:1}
-.hist-info .h-score{font-weight:700; color:var(--text); font-size:.95rem}
-.hist-info .h-date{font-size:.75rem; color:var(--muted)}
-.hist-del{background:transparent; color:var(--muted); padding:8px; flex:0 0 auto; font-size:1.1rem}
-#btnBorrarHist{background:var(--line); color:var(--muted); width:100%; margin-top:6px; font-size:.85rem}
-/* Gráfico de evolución */
-.chart-card{margin-bottom:14px}
-.chart-card h2{margin:0 0 10px; font-size:1rem; color:var(--blue); border-bottom:2px solid var(--line); padding-bottom:8px}
-.chart-legend{display:flex; flex-wrap:wrap; gap:14px; margin-bottom:10px; font-size:.78rem; color:var(--muted)}
-.chart-legend .lg{display:flex; align-items:center; gap:6px}
-.chart-legend .lg i{width:14px; height:3px; border-radius:2px; display:inline-block}
-#chartEvo{width:100%; height:auto; display:block}
-#chartEvo .axis{stroke:var(--line); stroke-width:1}
-#chartEvo .grid{stroke:var(--line); stroke-width:1; stroke-dasharray:3 4; opacity:.6}
-#chartEvo .tick{fill:var(--muted); font-size:10px}
-#chartEvo .line-risk{stroke:var(--accent); stroke-width:2.5; fill:none; stroke-linejoin:round; stroke-linecap:round}
-#chartEvo .line-imc{stroke:var(--blue); stroke-width:2; fill:none; stroke-dasharray:5 4; stroke-linejoin:round}
-#chartEvo .line-cint{stroke:var(--green); stroke-width:2; fill:none; stroke-dasharray:2 4; stroke-linejoin:round}
-#chartEvo .dot{stroke:var(--bg); stroke-width:1.5}
-#chartEvo .dot-risk{fill:var(--accent)}
-#chartEvo .dot-imc{fill:var(--blue)}
-#chartEvo .dot-cint{fill:var(--green)}
-/* Pantalla de bienvenida */
-#splash{
-position:fixed; inset:0; background:var(--bg); z-index:100; display:flex; flex-direction:column;
-align-items:center; justify-content:center; gap:14px; text-align:center; padding:24px;
-transition:opacity .4s;
-}
-#splash.hide{opacity:0; pointer-events:none}
-#splash .heart{width:110px; height:110px; animation:beat 1.1s infinite}
-@keyframes beat{0%,100%{transform:scale(1)} 25%{transform:scale(1.12)} 40%{transform:scale(1)} 55%{transform:scale(1.08)}}
-#splash h1{color:var(--accent); font-size:2.4rem; margin:0}
-#splash h1 span{color:var(--blue)}
-#splash p{color:var(--muted); font-size:.9rem; margin:0; max-width:300px; line-height:1.5}
-#splash .firm{color:var(--blue); font-weight:700; font-size:.85rem; margin-top:8px}
-/* Informe imprimible */
-#report{display:none}
-@media print{
-body *{visibility:hidden}
-#report, #report *{visibility:visible}
-#report{display:block; position:absolute; left:0; top:0; width:100%; padding:24px;
-font-family:Georgia, serif; color:#000; background:#fff}
-#report table{width:100%; border-collapse:collapse; margin:14px 0}
-#report td, #report th{border:1px solid #999; padding:8px; font-size:.9rem; text-align:left}
-#report th{background:#f0f0f0}
-}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.card h3{font-size:1rem;margin-bottom:8px;color:var(--primary-dark)}
+.search-box{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius);font-size:1rem;outline:none;background:var(--card);color:var(--text)}
+.search-box:focus{border-color:var(--primary)}
+.cat-chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.cat-chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem;cursor:pointer;transition:all .2s}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.food-list{max-height:420px;overflow-y:auto;margin-top:6px}
+.food-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.food-item:hover{background:var(--accent)}
+.food-item:last-child{border-bottom:none}
+.food-name{font-weight:500;font-size:.9rem;display:flex;align-items:center;gap:6px}
+.food-kcal{font-size:.78rem;color:var(--text-light);text-align:right}
+.traffic{display:inline-block;width:12px;height:12px;border-radius:50%}
+.t-green{background:var(--success)}.t-yellow{background:var(--warning)}.t-red{background:var(--danger)}
+.btn{padding:10px 18px;border:none;border-radius:var(--radius);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:active{background:var(--primary-dark)}
+.btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-block{width:100%;margin-top:8px}
+.meal-section{margin-bottom:16px}
+.meal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.meal-head h4{font-size:.92rem;color:var(--primary-dark)}
+.meal-head .meal-kcal{font-size:.85rem;font-weight:700;color:var(--primary)}
+.meal-plate{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.plate-item{background:var(--accent);padding:12px 10px;border-radius:8px;text-align:center;position:relative}
+.plate-item .remove-btn{position:absolute;top:4px;right:4px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.75rem;cursor:pointer;line-height:1}
+.plate-item .p-name{font-size:.8rem;font-weight:600}
+.plate-item .p-qty{font-size:.72rem;color:var(--text-light);margin-top:2px}
+.plate-item .p-kcal{font-size:.82rem;color:var(--primary-dark);font-weight:700;margin-top:2px}
+.nutrition-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.nutri-box{text-align:center;padding:10px 4px;background:var(--accent);border-radius:8px}
+.nutri-box .value{font-size:1.05rem;font-weight:700;color:var(--primary-dark)}
+.nutri-box .label{font-size:.68rem;color:var(--text-light)}
+.progress-wrap{margin-top:12px}
+.progress-bar{height:14px;background:var(--accent);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.progress-fill{height:100%;background:var(--primary);border-radius:10px;transition:width .4s}
+.progress-fill.over{background:var(--danger)}
+.progress-text{font-size:.8rem;color:var(--text-light);margin-top:4px;text-align:center}
+.input-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.input-row label{font-size:.85rem;min-width:100px}
+.input-row input,.input-row select{flex:1;padding:9px 12px;border:2px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:.9rem}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:200}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:520px;padding:20px;animation:up .25s;max-height:88vh;overflow-y:auto}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.modal h3{margin-bottom:12px;color:var(--primary-dark)}
+.qty-preview{background:var(--accent);border-radius:8px;padding:12px;text-align:center;margin:12px 0}
+.qty-preview .big{font-size:1.6rem;font-weight:700;color:var(--primary-dark)}
+.meal-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.meal-chip{padding:10px 4px;border-radius:10px;border:2px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem;cursor:pointer;text-align:center;transition:all .2s}
+.meal-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chart-wrap{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:170px;padding:10px 4px 0}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.chart-stack{width:70%;max-width:34px;display:flex;flex-direction:column-reverse;border-radius:6px;overflow:hidden;min-height:3px}
+.seg-break{background:#f0ad4e}.seg-snack{background:#7cb9e8}.seglunch{background:#1a6b4a}.segdinner{background:#2d8f6b}
+body.dark .seg-break{background:#e8b34b}body.dark .seg-snack{background:#5b9bd5}body.dark .seglunch{background:#3fbf86}body.dark .segdinner{background:#2a9d6a}
+.chart-val{font-size:.65rem;color:var(--text-light);margin-bottom:3px}
+.chart-day{font-size:.7rem;color:var(--text-light);margin-top:6px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:.72rem;color:var(--text-light)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.recipe-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.recipe-card h4{color:var(--primary-dark);font-size:.95rem}
+.recipe-card p{font-size:.8rem;color:var(--text-light);margin-top:4px}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--primary-dark);color:#fff;padding:10px 18px;border-radius:24px;font-size:.85rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.muted{font-size:.78rem;color:var(--text-light)}
+/* ---- Salud cardiovascular ---- */
+.vitals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.vital-stat{text-align:center;padding:12px 4px;background:var(--accent);border-radius:10px}
+.vital-stat .v{font-size:1.15rem;font-weight:700;color:var(--primary-dark)}
+.vital-stat .l{font-size:.68rem;color:var(--text-light)}
+.vital-form{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.vital-form input{padding:9px 6px;border:2px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:.85rem;text-align:center;width:100%}
+.vital-form input::placeholder{font-size:.68rem;color:var(--text-light)}
+.bp-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700;color:#fff}
+.bp-opt{background:var(--success)}.bp-norm{background:#8bc34a}.bp-high{background:var(--warning)}.bp-vhigh{background:var(--danger)}
+.vitals-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:8px}
+.vitals-table th,.vitals-table td{padding:7px 4px;text-align:center;border-bottom:1px solid var(--border)}
+.vitals-table th{color:var(--text-light);font-weight:600;font-size:.7rem}
+.linechart{width:100%;height:150px}
+/* ---- Presentación ---- */
+.hero{text-align:center;padding:24px 12px;background:var(--header-grad);border-radius:var(--radius);color:#fff;margin-bottom:14px}
+.hero-logo{font-size:2.2rem;font-weight:800;margin-bottom:6px}
+.hero h2{font-size:1.3rem;margin-bottom:6px}
+.hero .tag{font-size:.8rem;opacity:.9}
+.badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.badge{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:16px;font-size:.72rem}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.feat{background:var(--accent);padding:10px;border-radius:8px;font-size:.78rem;color:var(--text-light);line-height:1.4}
+.feat b{display:block;color:var(--primary-dark);font-size:.82rem;margin-bottom:3px}
+.profile-list{display:flex;flex-wrap:wrap;gap:8px}
+.profile-item{background:var(--accent);padding:8px 12px;border-radius:20px;font-size:.8rem;display:flex;align-items:center;gap:6px}
+.pi{font-size:1rem}
+.evi{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.evi span{background:var(--accent);padding:5px 10px;border-radius:14px;font-size:.72rem}
+.privacy{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;line-height:1.45}
+.app-footer{text-align:center;font-size:.75rem;color:var(--text-light);margin-top:20px;line-height:1.6}
+.app-footer .author{font-weight:600;color:var(--primary)}
+.tab-navigate{background:var(--primary)!important;color:#fff!important;font-weight:700;border-radius:10px;padding:5px 10px}
+.tab-navigate:hover{background:var(--primary-dark)!important}
 </style>
 </head>
 <body>
-
-<div id="splash">
-<svg class="heart" viewBox="0 0 512 512"><path d="M256 400c-96-72-152-128-152-192a88 88 0 0 1 152-60 88 88 0 0 1 152 60c0 64-56 120-152 192z" fill="#f87171"/><path d="M140 250h50l25-50 40 90 30-60h87" stroke="#fff" stroke-width="22" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-<h1>Re<span>-</span>Late</h1>
-<p>Tu calculadora de riesgo cardiovascular, siempre contigo. Funciona sin internet.</p>
-<div class="firm">Diseño: Miguel Ángel Layunta López</div>
+<header class="app-header">
+<div>
+  <h1>🫀 Re-Late Nutrición</h1>
+  <div class="subtitle">Saludable · Rehabilitación cardíaca</div>
 </div>
-
-<header>
-<h1>Re<span>-</span>Late</h1>
-<div class="subtitle">Calculadora de Riesgo Cardiovascular</div>
-<div class="author">Diseño: Miguel Ángel Layunta López</div>
+<button class="icon-btn" id="darkToggle" title="Modo oscuro">🌙</button>
 </header>
 
-<div id="installBanner">
-<span>📲 ¿Instalar <b>Re-Late</b> en tu móvil?</span>
-<button id="btnInstall">Instalar</button>
-</div>
-
-<div id="tab-calc" class="tab-content active">
+<main>
+<!-- ===================== ALIMENTOS ===================== -->
+<section class="tab-content active" id="tab-foods">
 <div class="card">
-<h2>Datos personales</h2>
-<div class="row">
-  <div><label>Edad (años)</label><input type="number" id="edad" min="18" max="100" value="50" inputmode="numeric"></div>
-  <div><label>Sexo</label><select id="sexo"><option value="H">Hombre</option><option value="M">Mujer</option></select></div>
+  <h3>🔎 Busca o filtra alimentos</h3>
+  <input class="search-box" id="foodSearch" placeholder="Ej: salmón, arroz, manzana...">
+  <div class="cat-chips" id="catChips"></div>
+  <div class="food-list" id="foodList"></div>
 </div>
-<div class="row">
-  <div><label>Peso (kg)</label><input type="number" id="peso" min="30" max="250" value="70" inputmode="decimal"></div>
-  <div><label>Talla (cm)</label><input type="number" id="talla" min="120" max="230" value="170" inputmode="numeric"></div>
-</div>
-<div class="row">
-  <div><label>Cintura (cm)</label><input type="number" id="cintura" min="40" max="200" value="90" inputmode="decimal"></div>
-  <div><label></label><div style="font-size:.72rem; color:var(--muted); padding-top:8px; line-height:1.4">Mídela al final de una espiración, a la altura del ombligo.</div></div>
-</div>
-<div class="row">
-  <div><label>Sistólica (mmHg)</label><input type="number" id="pas" min="80" max="250" value="130" inputmode="numeric"></div>
-  <div><label>Diastólica (mmHg)</label><input type="number" id="pad" min="50" max="150" value="80" inputmode="numeric"></div>
-</div>
-<label>Colesterol total (mg/dL)</label>
-<input type="number" id="chol" min="100" max="400" value="200" inputmode="numeric">
-<label>Glucemia basal (mg/dL)</label>
-<input type="number" id="gluc" min="60" max="300" value="95" inputmode="numeric">
-<div class="check"><input type="checkbox" id="tabaquismo"><label for="tabaquismo">Fumador/a</label></div>
-</div>
+</section>
 
+<!-- ===================== PLATOS ===================== -->
+<section class="tab-content" id="tab-plate">
 <div class="card">
-<h2>Estilo de vida</h2>
-<label>Dieta saludable (% adherencia): <span class="slider-val" id="dietav">70</span>%</label>
-<input type="range" id="dieta" min="0" max="100" value="70" oninput="dietav.textContent=this.value">
-<label>Ejercicio suave (días/semana): <span class="slider-val" id="e1v">2</span></label>
-<input type="range" id="ej1" min="0" max="7" value="2" oninput="e1v.textContent=this.value">
-<label>Ejercicio con fuerza (días/semana): <span class="slider-val" id="e2v">1</span></label>
-<input type="range" id="ej2" min="0" max="7" value="1" oninput="e2v.textContent=this.value">
-<label>Nivel de estrés (0–10): <span class="slider-val" id="stv">4</span></label>
-<input type="range" id="stress" min="0" max="10" value="4" oninput="stv.textContent=this.value">
-</div>
-
-<div class="card">
-<h2>Nivel de riesgo</h2>
-<div class="gauge-wrap">
-  <svg id="gauge" viewBox="0 0 320 180"></svg>
-  <div class="score-big" id="scoreBig">—</div>
-  <div class="badge b-green" id="badge" style="display:none">—</div>
-  <div class="desc" id="desc">Rellena los datos y pulsa <b>Calcular riesgo</b>.</div>
-</div>
-<div class="btns">
-  <button class="btn-calc" onclick="calcular()">Calcular</button>
-  <button class="btn-pdf" onclick="generarPDF()">Informe PDF</button>
-  <button class="btn-reset" onclick="reset()">Reset</button>
-</div>
-</div>
-
-<div class="card">
-<h2>Desglose</h2>
-<div id="detalle">Sin datos todavía.</div>
-</div>
-</div>
-
-<div id="tab-tips" class="tab-content">
-<div class="card">
-<h2>Recomendaciones para tu corazón</h2>
-<p style="color:var(--muted); font-size:.85rem; margin-top:0">Basadas en guías de la OMS y la Sociedad Española de Cardiología</p>
-</div>
-<div class="tips-grid">
-<div class="tip-card">
-  <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M32 14c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z" fill="#4ade80"/><path d="M26 28l4 4 8-8" stroke="#0f172a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="tip-text"><h3>Alimentación saludable</h3><p>Sigue una dieta <span class="highlight">mediterránea</span>: frutas, verduras, legumbres y aceite de oliva. Sal &lt;5 g/día y reduce azúcares y grasas saturadas.</p></div>
-</div>
-<div class="tip-card">
-  <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M20 40c4-8 8-12 12-12s8 4 12 12" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="22" r="6" fill="#38bdf8"/><path d="M24 44l-4 8M40 44l4 8" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/></svg></div>
-  <div class="tip-text"><h3>Ejercicio regular</h3><p>Al menos <span class="highlight">150 min/semana</span> de actividad aeróbica moderada y 2 días de fuerza. Evita el sedentarismo prolongado.</p></div>
-</div>
-<div class="tip-card">
-  <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><rect x="20" y="26" width="20" height="12" rx="2" fill="#f87171"/><path d="M40 30h6v4h-6z" fill="#f87171"/><line x1="18" y1="44" x2="46" y2="20" stroke="#f87171" stroke-width="4" stroke-linecap="round"/></svg></div>
-  <div class="tip-text"><h3>Deja el tabaco</h3><p>Fumar <span class="highlight">duplica el riesgo</span> cardiovascular. A los 5 años de dejarlo se acerca al de un no fumador.</p></div>
-</div>
-<div class="tip-card">
-  <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M32 18c-6 0-10 4-10 10 0 8 10 18 10 18s10-10 10-18c0-6-4-10-10-10z" fill="#fbbf24"/><path d="M28 30l3 3 5-5" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="tip-text"><h3>Controla tu presión</h3><p>Objetivo: por debajo de <span class="highlight">130/80 mmHg</span>. Mídela en casa, reduce el estrés y sigue el tratamiento médico.</p></div>
-</div>
-<div class="tip-card">
-  <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M22 32h20M32 22v20" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="32" r="14" stroke="#2dd4bf" stroke-width="3" fill="none"/></svg></div>
-  <div class="tip-text"><h3>Colesterol y glucemia</h3><p>LDL <span class="highlight">&lt;115 mg/dL</span> y glucemia en ayunas &lt;100 mg/dL. Analítica anual y dieta equilibrada.</p></div>
-</div>
-<div class="tip-card">
-  <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M32 20c-4 0-7 3-7 7 0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" fill="#c084fc"/><path d="M26 42c0 3 3 5 6 5s6-2 6-5" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/></svg></div>
-  <div class="tip-text"><h3>Gestiona el estrés</h3><p>El estrés crónico eleva la presión y el riesgo cardíaco. Practica <span class="highlight">mindfulness</span>, duerme 7–8 h y cuida tus relaciones.</p></div>
-</div>
-</div>
-</div>
-
-<div id="tab-hist" class="tab-content">
-<div class="card chart-card">
-<h2>Evolución</h2>
-<div class="chart-legend">
-  <span class="lg"><i style="background:var(--accent)"></i>Riesgo (0–100)</span>
-  <span class="lg"><i style="background:var(--blue)"></i>IMC</span>
-  <span class="lg"><i style="background:var(--green)"></i>Cintura (cm)</span>
-</div>
-<svg id="chartEvo" viewBox="0 0 340 200" preserveAspectRatio="xMidYMid meet"></svg>
-<div id="chartMsg" style="font-size:.8rem; color:var(--muted); text-align:center; margin-top:8px; display:none">Calcula tu riesgo para empezar a ver la evolución.</div>
+  <h3>🍽️ Tus comidas de hoy</h3>
+  <p class="muted">Toca un alimento en "Alimentos" y elige a qué comida añadirlo.</p>
+  <div id="mealsWrap"></div>
+  <div class="nutrition-summary" id="nutriSummary"></div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div class="progress-text" id="progText">Añade alimentos a tus comidas</div>
+  </div>
+  <button class="btn btn-danger btn-block" id="clearDay">🗑️ Vaciar el día</button>
 </div>
 <div class="card">
-<h2>Historial de resultados</h2>
-<div id="listaHist" style="font-size:.9rem; color:var(--muted)">Aún no has calculado ningún riesgo.</div>
-<button id="btnBorrarHist" style="display:none" onclick="borrarHistorial()">🗑 Borrar todo el historial</button>
+  <h3>🥗 Platos preparados (cardiosaludables)</h3>
+  <div class="food-list" id="preparedList"></div>
+</div>
+</section>
+
+<!-- ===================== DIARIO ===================== -->
+<section class="tab-content" id="tab-diary">
+<div class="card">
+  <h3>🎯 Objetivo diario</h3>
+  <div class="input-row">
+    <label>Kcal objetivo</label>
+    <input type="number" id="goalInput" min="800" max="5000" step="50">
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="dayProgFill" style="width:0%"></div></div>
+    <div class="progress-text" id="dayProgText"></div>
+  </div>
+</div>
+<div class="card">
+  <h3>📈 Historial semanal (kcal por comida)</h3>
+  <div class="chart-wrap" id="weekChart"></div>
+  <div class="legend">
+    <span><i style="background:#f0ad4e"></i>Desayuno</span>
+    <span><i style="background:#7cb9e8"></i>Media</span>
+    <span><i style="background:#1a6b4a"></i>Comida</span>
+    <span><i style="background:#2d8f6b"></i>Cena</span>
+  </div>
+</div>
+<div class="card">
+  <h3>📤 Exportar diario</h3>
+  <p class="muted">Genera un resumen para tu médico o fisioterapeuta.</p>
+  <button class="btn btn-primary btn-block" id="exportDownload">⬇️ Descargar (.txt)</button>
+  <button class="btn btn-outline btn-block" id="exportCopy">📋 Copiar al portapapeles</button>
+  <button class="btn btn-outline btn-block" id="exportShare">📲 Compartir</button>
+</div>
+</section>
+
+<!-- ===================== SALUD ===================== -->
+<section class="tab-content" id="tab-health">
+<div class="card">
+  <h3>❤️ Registro cardiovascular</h3>
+  <p class="muted">Anota tu tensión, pulso y peso. Ideal para el seguimiento en rehabilitación cardíaca.</p>
+  <div class="vitals-grid" id="vitalsStats"></div>
+  <div class="vital-form">
+    <input type="number" id="vSys" placeholder="Sistólica (120)">
+    <input type="number" id="vDia" placeholder="Diastólica (80)">
+    <input type="number" id="vPulse" placeholder="Pulso (70)">
+    <input type="number" id="vWeight" placeholder="Peso kg" step="0.1">
+  </div>
+  <button class="btn btn-primary btn-block" id="vAdd">➕ Registrar medición</button>
+</div>
+<div class="card">
+  <h3>📉 Tensión arterial (últimos 14 días)</h3>
+  <svg class="linechart" id="bpChart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
+  <div class="legend">
+    <span><i style="background:#d9534f"></i>Sistólica</span>
+    <span><i style="background:#1a6b4a"></i>Diastólica</span>
+    <span><i style="background:#7cb9e8"></i>Objetivo 120/80</span>
+  </div>
+</div>
+<div class="card">
+  <h3>⚖️ Peso (últimos 14 días)</h3>
+  <svg class="linechart" id="wChart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
+</div>
+<div class="card">
+  <h3>📒 Historial de mediciones</h3>
+  <div style="overflow-x:auto"><table class="vitals-table" id="vitalsTable"></table></div>
+  <button class="btn btn-outline btn-block" id="exportHealth">📤 Exportar registro de salud</button>
+</div>
+</section>
+
+<!-- ===================== RECETAS ===================== -->
+<section class="tab-content" id="tab-recipes">
+<div class="card">
+  <h3>👨‍🍳 Recetas cardiosaludables</h3>
+  <div id="recipeList"></div>
+</div>
+</section>
+
+<!-- ===================== PRESENTACIÓN ===================== -->
+<section class="tab-content" id="tab-about">
+<div class="hero">
+<div class="hero-logo">🫀 RL</div>
+<h2>Re-Late Nutrición Saludable</h2>
+<div class="tag">Aplicación PWA de nutrición saludable para rehabilitación cardíaca</div>
+<div class="badges">
+  <span class="badge">📱 PWA</span>
+  <span class="badge">📴 100% Offline</span>
+  <span class="badge">🔒 RGPD</span>
+  <span class="badge">❤️ Salud cardíaca</span>
 </div>
 </div>
+<div class="card">
+<h4>📋 ¿Qué es Re-Late?</h4>
+<p class="muted" style="line-height:1.5">Re-Late es una aplicación web progresiva diseñada para pacientes en rehabilitación cardíaca y personas que buscan una alimentación saludable. Funciona sin conexión y cumple con el RGPD: todos los datos se almacenan únicamente en tu dispositivo.</p>
+</div>
+<div class="card">
+<h4>✨ Características</h4>
+<div class="feat-grid">
+  <div class="feat"><b>🍽️ Alimentos</b>Buscador, cálculo nutricional automático y semáforo cardio.</div>
+  <div class="feat"><b>📷 Recetas</b>Catálogo cardiosaludable con evidencia científica.</div>
+  <div class="feat"><b>📅 Diario</b>Registro de comidas, objetivo calórico e historial semanal.</div>
+  <div class="feat"><b>❤️ Salud</b>Control de tensión, pulso y peso con gráficas.</div>
+</div>
+</div>
+<div class="card">
+<h4>🩺 Perfiles clínicos</h4>
+<p class="muted" style="margin-bottom:8px">Cada perfil ajusta dinámicamente los umbrales del semáforo nutricional:</p>
+<div class="profile-list">
+  <div class="profile-item"><span class="pi">🫀</span>Cardíaco</div>
+  <div class="profile-item"><span class="pi">🩸</span>Hipertenso</div>
+  <div class="profile-item"><span class="pi">📉</span>Dislipidemia</div>
+  <div class="profile-item"><span class="pi">💉</span>Diabetes tipo 1</div>
+  <div class="profile-item"><span class="pi">🍬</span>Diabetes tipo 2</div>
+</div>
+</div>
+<div class="card">
+<h4>🔬 Evidencia científica</h4>
+<p class="muted">Recomendaciones basadas en:</p>
+<div class="evi"><span>PREDIMED</span><span>AHA</span><span>EFSA</span><span>Dieta mediterránea</span></div>
+</div>
+<div class="card">
+<h4>🔒 Privacidad y funcionamiento</h4>
+<div class="privacy" style="margin-bottom:10px"><span class="pi">📴</span><div><b>100% offline:</b> una vez instalada, funciona sin conexión a internet gracias a su service worker.</div></div>
+<div class="privacy"><span class="pi">🛡️</span><div><b>RGPD:</b> no se envían datos a servidores. Todo se guarda localmente en tu dispositivo (localStorage) y puedes exportarlo o borrarlo cuando quieras.</div></div>
+</div>
+<div class="app-footer">
+<div>Re-Late · Nutrición y rehabilitación cardíaca</div>
+<div class="author">Miguel Ángel Layunta López</div>
+<div>© 2026 · Versión PWA 1.0</div>
+</div>
+</section>
+</main>
 
-<footer>Re-Late · Herramienta orientativa, no sustituye el criterio médico.</footer>
-
-<nav class="tabbar">
-<button class="tab-btn active" onclick="cambiarTab('calc', this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-Calculadora
-</button>
-<button class="tab-btn" onclick="cambiarTab('tips', this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-Consejos
-</button>
-<button class="tab-btn" onclick="cambiarTab('hist', this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 3"/></svg>
-Historial
-</button>
+<nav class="tab-bar">
+<button class="tab-btn active" data-tab="tab-foods"><span class="tab-icon">🥦</span>Alimentos</button>
+<button class="tab-btn" data-tab="tab-plate"><span class="tab-icon">🍽️</span>Comidas</button>
+<button class="tab-btn" data-tab="tab-diary"><span class="tab-icon">📊</span>Diario</button>
+<button class="tab-btn" data-tab="tab-health"><span class="tab-icon">❤️</span>Salud</button>
+<button class="tab-btn" data-tab="tab-recipes"><span class="tab-icon">📖</span>Recetas</button>
+<button class="tab-btn" data-tab="tab-about"><span class="tab-icon">🫀</span>Info</button>
 </nav>
 
-<div id="report"></div>
+<!-- MODAL RACIÓN -->
+<div class="modal-overlay" id="qtyModal">
+<div class="modal">
+  <h3 id="qtyTitle">Ración</h3>
+  <p class="muted">Elige la comida e indica la cantidad.</p>
+  <div class="meal-chips" id="mealChips"></div>
+  <div class="input-row">
+    <label>Cantidad</label>
+    <input type="number" id="qtyInput" min="1" step="1">
+    <select id="qtyUnit"><option value="g">gramos</option><option value="ud">unidades</option></select>
+  </div>
+  <div class="qty-preview"><div class="big" id="qtyKcal">0 kcal</div><div class="muted" id="qtyMacro"></div></div>
+  <button class="btn btn-primary btn-block" id="qtyAdd">➕ Añadir a la comida</button>
+  <button class="btn btn-outline btn-block" id="qtyCancel">Cancelar</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-let ultimoResultado = null;
-const KEY_HIST = 're-late-historial';
+/* ================= DATOS ================= */
+const FOODS = [
+ {n:'Brócoli',c:'Verduras',k:34,p:2.8,f:0.4,car:6.6,light:'green',ref:100},
+ {n:'Espinacas',c:'Verduras',k:23,p:2.9,f:0.4,car:3.6,light:'green',ref:100},
+ {n:'Calabacín',c:'Verduras',k:17,p:1.2,f:0.3,car:3.1,light:'green',ref:100},
+ {n:'Tomate',c:'Verduras',k:18,p:0.9,f:0.2,car:3.9,light:'green',ref:100},
+ {n:'Zanahoria',c:'Verduras',k:41,p:0.9,f:0.2,car:9.6,light:'green',ref:100},
+ {n:'Pimiento rojo',c:'Verduras',k:31,p:1.0,f:0.3,car:6.0,light:'green',ref:100},
+ {n:'Judías verdes',c:'Verduras',k:31,p:1.8,f:0.2,car:7.0,light:'green',ref:100},
+ {n:'Lechuga',c:'Verduras',k:15,p:1.4,f:0.2,car:2.9,light:'green',ref:100},
+ {n:'Coliflor',c:'Verduras',k:25,p:1.9,f:0.3,car:5.0,light:'green',ref:100},
+ {n:'Berenjena',c:'Verduras',k:25,p:1.0,f:0.2,car:5.9,light:'green',ref:100},
+ {n:'Manzana',c:'Frutas',k:52,p:0.3,f:0.2,car:14,light:'green',ref:150,unit:'ud'},
+ {n:'Plátano',c:'Frutas',k:89,p:1.1,f:0.3,car:23,light:'yellow',ref:120,unit:'ud'},
+ {n:'Naranja',c:'Frutas',k:47,p:0.9,f:0.1,car:12,light:'green',ref:130,unit:'ud'},
+ {n:'Fresas',c:'Frutas',k:32,p:0.7,f:0.3,car:7.7,light:'green',ref:100},
+ {n:'Arándanos',c:'Frutas',k:57,p:0.7,f:0.3,car:14,light:'green',ref:100},
+ {n:'Kiwi',c:'Frutas',k:61,p:1.1,f:0.5,car:15,light:'green',ref:75,unit:'ud'},
+ {n:'Pera',c:'Frutas',k:57,p:0.4,f:0.1,car:15,light:'green',ref:170,unit:'ud'},
+ {n:'Sandía',c:'Frutas',k:30,p:0.6,f:0.2,car:7.6,light:'green',ref:200},
+ {n:'Uvas',c:'Frutas',k:69,p:0.7,f:0.2,car:18,light:'yellow',ref:100},
+ {n:'Arroz integral',c:'Cereales',k:111,p:2.6,f:0.9,car:23,light:'green',ref:100},
+ {n:'Avena',c:'Cereales',k:379,p:13,f:6.5,car:66,light:'green',ref:40},
+ {n:'Pan integral',c:'Cereales',k:247,p:10,f:3.4,car:41,light:'yellow',ref:40},
+ {n:'Quinoa',c:'Cereales',k:120,p:4.4,f:1.9,car:21,light:'green',ref:100},
+ {n:'Pasta integral',c:'Cereales',k:124,p:5,f:1.1,car:25,light:'yellow',ref:100},
+ {n:'Patata cocida',c:'Cereales',k:87,p:1.9,f:0.1,car:20,light:'yellow',ref:150},
+ {n:'Cuscús',c:'Cereales',k:112,p:3.8,f:0.2,car:23,light:'yellow',ref:100},
+ {n:'Pollo (pechuga)',c:'Proteínas',k:165,p:31,f:3.6,car:0,light:'green',ref:120},
+ {n:'Salmón',c:'Proteínas',k:208,p:20,f:13,car:0,light:'green',ref:120},
+ {n:'Atún fresco',c:'Proteínas',k:144,p:23,f:4.9,car:0,light:'green',ref:120},
+ {n:'Merluza',c:'Proteínas',k:81,p:17,f:0.7,car:0,light:'green',ref:120},
+ {n:'Huevos',c:'Proteínas',k:155,p:13,f:11,car:1.1,light:'yellow',ref:50,unit:'ud'},
+ {n:'Lentejas cocidas',c:'Proteínas',k:116,p:9,f:0.4,car:20,light:'green',ref:150},
+ {n:'Garbanzos cocidos',c:'Proteínas',k:164,p:8.9,f:2.6,car:27,light:'green',ref:150},
+ {n:'Tofu',c:'Proteínas',k:76,p:8,f:4.8,car:1.9,light:'green',ref:100},
+ {n:'Pavo (pechuga)',c:'Proteínas',k:189,p:29,f:7.3,car:0,light:'green',ref:120},
+ {n:'Bacalao',c:'Proteínas',k:82,p:18,f:0.7,car:0,light:'green',ref:120},
+ {n:'Yogur natural',c:'Lácteos',k:61,p:3.5,f:3.3,car:4.7,light:'green',ref:125,unit:'ud'},
+ {n:'Leche desnatada',c:'Lácteos',k:34,p:3.4,f:0.1,car:5,light:'green',ref:200},
+ {n:'Queso fresco',c:'Lácteos',k:174,p:14,f:10,car:3.1,light:'yellow',ref:40},
+ {n:'Queso curado',c:'Lácteos',k:402,p:25,f:33,car:0.5,light:'red',ref:30},
+ {n:'Leche entera',c:'Lácteos',k:61,p:3.2,f:3.3,car:4.8,light:'yellow',ref:200},
+ {n:'Aceite de oliva',c:'Grasas',k:884,p:0,f:100,car:0,light:'yellow',ref:10},
+ {n:'Aguacate',c:'Grasas',k:160,p:2,f:15,car:9,light:'green',ref:100,unit:'ud'},
+ {n:'Nueces',c:'Grasas',k:654,p:15,f:65,car:14,light:'yellow',ref:25},
+ {n:'Almendras',c:'Grasas',k:579,p:21,f:50,car:22,light:'yellow',ref:25},
+ {n:'Semillas de chía',c:'Grasas',k:486,p:17,f:31,car:42,light:'green',ref:15},
+ {n:'Embutido (chorizo)',c:'Procesados',k:455,p:24,f:38,car:1.8,light:'red',ref:50},
+ {n:'Mantequilla',c:'Procesados',k:717,p:0.9,f:81,car:0.1,light:'red',ref:10},
+ {n:'Refresco azucarado',c:'Procesados',k:42,p:0,f:0,car:11,light:'red',ref:330,unit:'ud'},
+ {n:'Bollería industrial',c:'Procesados',k:452,p:6,f:21,car:58,light:'red',ref:60},
+ {n:'Patatas fritas',c:'Procesados',k:542,p:3.4,f:34,car:52,light:'red',ref:50},
+];
 
-/* ---- Pantalla de bienvenida ---- */
-window.addEventListener('load', ()=>{
-setTimeout(()=>{
-const s = document.getElementById('splash');
-s.classList.add('hide');
-setTimeout(()=>s.remove(), 500);
-}, 1600);
+const PREPARED = [
+ {n:'Ensalada mediterránea',k:180,p:6,f:8,car:18,light:'green'},
+ {n:'Pollo a la plancha con verduras',k:320,p:34,f:10,car:14,light:'green'},
+ {n:'Salmón al horno con quinoa',k:430,p:32,f:18,car:30,light:'green'},
+ {n:'Lentejas estofadas',k:280,p:18,f:2,car:42,light:'green'},
+ {n:'Pasta integral con tomate',k:350,p:12,f:4,car:62,light:'yellow'},
+ {n:'Hamburguesa de pavo',k:310,p:28,f:14,car:18,light:'yellow'},
+];
+
+const RECIPES = [
+ {t:'Salmón al horno con limón',d:'Salmón 120g, limón, ajo, perejil, 1 cda aceite de oliva. Horno 180°C 15 min. Rico en omega-3.'},
+ {t:'Bowl de quinoa y verduras',d:'Quinoa 60g, brócoli, zanahoria, garbanzos 80g, aceite de oliva. Equilibrio perfecto.'},
+ {t:'Crema de calabacín',d:'Calabacín 200g, puerro, caldo de verduras, 1 cda aceite de oliva. Sin nata, baja en sodio.'},
+ {t:'Pollo mediterráneo',d:'Pechuga 120g, tomate cherry, pimiento, cebolla, hierbas. A la plancha con poco aceite.'},
+ {t:'Porridge de avena y frutos rojos',d:'Avena 40g, leche desnatada 200ml, arándanos 50g. Fibra y antioxidantes.'},
+];
+
+const CATS = ['Todos','Verduras','Frutas','Cereales','Proteínas','Lácteos','Grasas','Procesados'];
+const MEALS = [
+ {id:'breakfast',label:'🌅 Desayuno',cls:'seg-break'},
+ {id:'snack',label:'🥪 Media',cls:'seg-snack'},
+ {id:'lunch',label:'🍽️ Comida',cls:'seglunch'},
+ {id:'dinner',label:'🌙 Cena',cls:'segdinner'},
+];
+
+/* ================= ESTADO ================= */
+let meals = {breakfast:[],snack:[],lunch:[],dinner:[]};
+let activeCat = 'Todos';
+let pendingFood = null;
+let pendingMeal = 'lunch';
+let goal = 2000;
+let diary = {};   // { 'YYYY-MM-DD': {breakfast,snack,lunch,dinner} }
+let vitals = [];  // {date, sys, dia, pulse, weight}
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const todayKey = () => new Date().toISOString().slice(0,10);
+const fmt = n => Math.round(n);
+function save(){ localStorage.setItem('relate', JSON.stringify({meals,goal,diary,vitals,dark:document.body.classList.contains('dark')})); }
+function load(){ try{ const d=JSON.parse(localStorage.getItem('relate')||'{}'); if(d.meals)meals=d.meals; if(d.goal)goal=d.goal; if(d.diary)diary=d.diary; if(d.vitals)vitals=d.vitals; if(d.dark)document.body.classList.add('dark'); }catch(e){} }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+function lightDot(l){ return `<span class="traffic t-${l==='green'?'green':l==='yellow'?'yellow':'red'}"></span>`; }
+function mealTotals(arr){ return arr.reduce((a,b)=>({k:a.k+b.k,p:a.p+b.p,f:a.f+b.f,car:a.car+b.car}),{k:0,p:0,f:0,car:0}); }
+function dayTotals(){ return MEALS.reduce((a,m)=>{const t=mealTotals(meals[m.id]);return{k:a.k+t.k,p:a.p+t.p,f:a.f+t.f,car:a.car+t.car};},{k:0,p:0,f:0,car:0}); }
+function bpClass(sys,dia){ if(sys<120&&dia<80)return['bp-opt','\u00d3ptima']; if(sys<130&&dia<85)return['bp-norm','Normal']; if(sys<140||dia<90)return['bp-high','Elevada']; return['bp-vhigh','Alta']; }
+
+/* ================= RENDER ALIMENTOS ================= */
+function renderChips(){
+$('#catChips').innerHTML = CATS.map(c=>`<button class="chip ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`).join('');
+document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{activeCat=ch.dataset.cat;renderChips();renderFoods();});
+}
+function renderFoods(){
+const q = $('#foodSearch').value.toLowerCase();
+const list = FOODS.filter(f=>(activeCat==='Todos'||f.c===activeCat)&&f.n.toLowerCase().includes(q));
+$('#foodList').innerHTML = list.length ? list.map(f=>`
+  <div class="food-item" data-n="${f.n}">
+    <span class="food-name">${lightDot(f.light)}${f.n}</span>
+    <span class="food-kcal">${f.k} kcal / ${f.ref}${f.unit==='ud'?' ud':' g'}<br>${f.p}P \u00b7 ${f.f}G \u00b7 ${f.car}C</span>
+  </div>`).join('') : '<p class="muted" style="padding:12px">No se encontraron alimentos.</p>';
+document.querySelectorAll('#foodList .food-item').forEach(el=>el.onclick=()=>openQty(FOODS.find(f=>f.n===el.dataset.n)));
+}
+
+/* ================= MODAL RACIÓN ================= */
+function renderMealChips(){
+$('#mealChips').innerHTML = MEALS.map(m=>`<button class="meal-chip ${m.id===pendingMeal?'active':''}" data-m="${m.id}">${m.label}</button>`).join('');
+document.querySelectorAll('.meal-chip').forEach(ch=>ch.onclick=()=>{pendingMeal=ch.dataset.m;renderMealChips();});
+}
+function openQty(f){
+pendingFood=f;
+$('#qtyTitle').textContent='\U0001F37D\uFE0F '+f.n;
+$('#qtyInput').value=f.ref;
+$('#qtyUnit').value=f.unit||'g';
+$('#qtyUnit').disabled=false; $('#qtyInput').disabled=false;
+renderMealChips();
+updateQtyPreview();
+$('#qtyModal').classList.add('show');
+}
+function updateQtyPreview(){
+if(!pendingFood)return;
+const qty=+$('#qtyInput').value||0, unit=$('#qtyUnit').value;
+const factor = unit==='g' ? qty/pendingFood.ref : qty;
+const k=pendingFood.k*factor, p=pendingFood.p*factor, f2=pendingFood.f*factor, c=pendingFood.car*factor;
+$('#qtyKcal').textContent=fmt(k)+' kcal';
+$('#qtyMacro').textContent=`${fmt(p)} g prote\u00edna \u00b7 ${fmt(f2)} g grasa \u00b7 ${fmt(c)} g hidratos`;
+pendingFood._calc={k,p,f:f2,car:c,qty,unit};
+}
+$('#qtyInput').addEventListener('input',updateQtyPreview);
+$('#qtyUnit').addEventListener('change',updateQtyPreview);
+$('#qtyCancel').onclick=()=>$('#qtyModal').classList.remove('show');
+$('#qtyAdd').onclick=()=>{
+if(!pendingFood||!pendingFood._calc)return;
+const c=pendingFood._calc;
+meals[pendingMeal].push({name:pendingFood.n,k:c.k,p:c.p,f:c.f,car:c.car,qty:c.qty,unit:c.unit});
+save(); renderMeals(); $('#qtyModal').classList.remove('show');
+toast('A\u00f1adido \u2705'); switchTab('tab-plate');
+};
+
+/* ================= COMIDAS ================= */
+function renderMeals(){
+$('#mealsWrap').innerHTML = MEALS.map(m=>{
+  const arr=meals[m.id], t=mealTotals(arr);
+  return `<div class="meal-section">
+    <div class="meal-head"><h4>${m.label}</h4><span class="meal-kcal">${fmt(t.k)} kcal</span></div>
+    <div class="meal-plate">${arr.length?arr.map((it,i)=>`
+      <div class="plate-item">
+        <button class="remove-btn" data-m="${m.id}" data-i="${i}">\u2715</button>
+        <div class="p-name">${it.name}</div>
+        <div class="p-qty">${it.qty}${it.unit}</div>
+        <div class="p-kcal">${fmt(it.k)} kcal</div>
+      </div>`).join(''):'<p class="muted">Sin alimentos.</p>'}</div>
+  </div>`;
+}).join('');
+document.querySelectorAll('.remove-btn').forEach(b=>b.onclick=()=>{meals[b.dataset.m].splice(+b.dataset.i,1);save();renderMeals();});
+const tot=dayTotals();
+$('#nutriSummary').innerHTML=`
+  <div class="nutri-box"><div class="value">${fmt(tot.k)}</div><div class="label">kcal</div></div>
+  <div class="nutri-box"><div class="value">${fmt(tot.p)}</div><div class="label">Prote\u00edna</div></div>
+  <div class="nutri-box"><div class="value">${fmt(tot.f)}</div><div class="label">Grasa</div></div>
+  <div class="nutri-box"><div class="value">${fmt(tot.car)}</div><div class="label">Hidratos</div></div>`;
+const pct=goal?Math.min(tot.k/goal*100,100):0;
+$('#progFill').style.width=pct+'%';
+$('#progFill').classList.toggle('over',tot.k>goal);
+$('#progText').textContent=`${fmt(tot.k)} de ${goal} kcal \u00b7 ${Math.round(tot.k/goal*100)}% del objetivo`;
+const d={}; MEALS.forEach(m=>d[m.id]=mealTotals(meals[m.id]).k);
+diary[todayKey()]=d; save(); renderDiary();
+}
+$('#clearDay').onclick=()=>{meals={breakfast:[],snack:[],lunch:[],dinner:[]};save();renderMeals();toast('D\u00eda vaciado');};
+
+/* ================= PLATOS PREPARADOS ================= */
+function renderPrepared(){
+$('#preparedList').innerHTML=PREPARED.map((p,i)=>`
+  <div class="food-item" data-i="${i}">
+    <span class="food-name">${lightDot(p.light)}${p.n}</span>
+    <span class="food-kcal">${p.k} kcal \u00b7 ${p.p}P \u00b7 ${p.f}G \u00b7 ${p.car}C</span>
+  </div>`).join('');
+document.querySelectorAll('#preparedList .food-item').forEach(el=>el.onclick=()=>{
+  const p=PREPARED[+el.dataset.i];
+  pendingFood={...p,ref:1,unit:'ud',_calc:{k:p.k,p:p.p,f:p.f,car:p.car,qty:1,unit:' raci\u00f3n'}};
+  pendingMeal='lunch';
+  $('#qtyTitle').textContent='\U0001F957 '+p.n;
+  $('#qtyInput').value=1; $('#qtyUnit').value='ud';
+  $('#qtyUnit').disabled=true; $('#qtyInput').disabled=true;
+  $('#qtyKcal').textContent=fmt(p.k)+' kcal';
+  $('#qtyMacro').textContent=`${fmt(p.p)} g prote\u00edna \u00b7 ${fmt(p.f)} g grasa \u00b7 ${fmt(p.car)} g hidratos`;
+  renderMealChips();
+  $('#qtyModal').classList.add('show');
 });
+}
 
-function cambiarTab(tabId, btn){
+/* ================= DIARIO / OBJETIVO ================= */
+function renderDiary(){
+$('#goalInput').value=goal;
+const today=diary[todayKey()]||{};
+const total=MEALS.reduce((a,m)=>a+(today[m.id]||0),0);
+const pct=goal?Math.min(total/goal*100,100):0;
+$('#dayProgFill').style.width=pct+'%';
+$('#dayProgFill').classList.toggle('over',total>goal);
+$('#dayProgText').textContent=`Hoy: ${fmt(total)} kcal de ${goal} (${Math.round(total/goal*100)}%)`;
+const days=[];
+for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);
+  days.push({key,lbl:['D','L','M','X','J','V','S'][d.getDay()],val:diary[key]||{},today:i===0});}
+const max=Math.max(goal,...days.map(d=>MEALS.reduce((a,m)=>a+(d.val[m.id]||0),0)),1);
+$('#weekChart').innerHTML=days.map(d=>{
+  const t=MEALS.reduce((a,m)=>a+(d.val[m.id]||0),0);
+  return `<div class="chart-col">
+    <div class="chart-val">${t?fmt(t):''}</div>
+    <div class="chart-stack" style="height:${Math.max(t/max*100,2)}%">
+      ${MEALS.map(m=>`<div class="${m.cls}" style="height:${t?(d.val[m.id]||0)/t*100:0}%"></div>`).join('')}
+    </div>
+    <div class="chart-day">${d.lbl}</div>
+  </div>`;}).join('');
+}
+$('#goalInput').addEventListener('change',e=>{goal=+e.target.value||2000;save();renderMeals();renderDiary();});
+
+/* ================= SALUD CARDIOVASCULAR ================= */
+function renderVitals(){
+const last=vitals[vitals.length-1];
+const wArr=vitals.filter(v=>v.weight);
+const lastW=wArr[wArr.length-1];
+const firstW=wArr[0];
+const diff=lastW&&firstW?(lastW.weight-firstW.weight):null;
+let stats=`
+  <div class="vital-stat"><div class="v">${last&&last.sys?last.sys+'/'+last.dia:'--'}</div><div class="l">\u00daltima TA</div></div>
+  <div class="vital-stat"><div class="v">${last&&last.pulse?last.pulse:'--'}</div><div class="l">Pulso lpm</div></div>
+  <div class="vital-stat"><div class="v">${lastW?lastW.weight:'--'}</div><div class="l">Peso kg${diff!=null?' ('+(diff>0?'+':'')+diff.toFixed(1)+')':''}</div></div>`;
+$('#vitalsStats').innerHTML=stats;
+// tabla (\u00faltimas 10)
+const rows=[...vitals].reverse().slice(0,10).map(v=>{
+  const bc=v.sys?bpClass(v.sys,v.dia):null;
+  return `<tr>
+    <td>${new Date(v.date).toLocaleDateString('es-ES')}</td>
+    <td>${v.sys?v.sys+'/'+v.dia:'--'}${bc?' <span class="bp-badge '+bc[0]+'">'+bc[1]+'</span>':''}</td>
+    <td>${v.pulse||'--'}</td>
+    <td>${v.weight||'--'}</td>
+  </tr>`;}).join('');
+$('#vitalsTable').innerHTML=`<tr><th>Fecha</th><th>TA</th><th>Pulso</th><th>Peso</th></tr>`+(rows||'<tr><td colspan="4" class="muted">Sin mediciones todav\u00eda</td></tr>');
+drawCharts();
+}
+function vAdd(){
+const sys=+$('#vSys').value||null, dia=+$('#vDia').value||null, pulse=+$('#vPulse').value||null, weight=+$('#vWeight').value||null;
+if(!sys&&!pulse&&!weight){toast('Introduce alg\u00fan dato');return;}
+vitals.push({date:new Date().toISOString(),sys,dia,pulse,weight});
+save(); renderVitals();
+$('#vSys').value=$('#vDia').value=$('#vPulse').value=$('#vWeight').value='';
+toast('Medici\u00f3n registrada \u2764\uFE0F');
+}
+$('#vAdd').onclick=vAdd;
+
+function lineChart(svgId,data,series,colors,min,max){
+const svg=document.getElementById(svgId);
+const W=320,H=150,P=14;
+if(!data.length){svg.innerHTML=`<text x="160" y="75" text-anchor="middle" font-size="11" fill="var(--text-light)">Sin datos suficientes</text>`;return;}
+const vals=data.flatMap(d=>series.map(s=>d[s]));
+const lo=Math.min(...vals,min??Infinity), hi=Math.max(...vals,max??-Infinity);
+const range=(hi-lo)||1;
+const x=i=>P+i*(W-2*P)/Math.max(data.length-1,1);
+const y=v=>H-P-(v-lo)/range*(H-2*P);
+let out='';
+// rejilla + objetivo
+if(svgId==='bpChart'){[80,120].forEach((g,gi)=>{out+=`<line x1="${P}" y1="${y(g)}" x2="${W-P}" y2="${y(g)}" stroke="#7cb9e8" stroke-width="1" stroke-dasharray="4 3" opacity=".6"/>`;});}
+series.forEach((s,si)=>{
+  const pts=data.map((d,i)=>`${x(i)},${y(d[s])}`).join(' ');
+  out+=`<polyline points="${pts}" fill="none" stroke="${colors[si]}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  data.forEach((d,i)=>{out+=`<circle cx="${x(i)}" cy="${y(d[s])}" r="3" fill="${colors[si]}"/>`;});
+});
+svg.innerHTML=out;
+}
+function drawCharts(){
+const recent=vitals.slice(-14);
+const bp=recent.filter(v=>v.sys);
+lineChart('bpChart',bp,['sys','dia'],['#d9534f','#1a6b4a']);
+const w=recent.filter(v=>v.weight);
+lineChart('wChart',w,['weight'],['#2d8f6b']);
+}
+
+/* ================= EXPORTAR ================= */
+function buildReport(){
+const tot=dayTotals();
+let txt=`RE-LATE NUTRICI\u00d3N \u2014 Diario de ${new Date().toLocaleDateString('es-ES')}\nObjetivo: ${goal} kcal\n\n`;
+MEALS.forEach(m=>{
+  const t=mealTotals(meals[m.id]);
+  txt+=`${m.label} (${fmt(t.k)} kcal):\n`;
+  if(meals[m.id].length) meals[m.id].forEach(it=>txt+=`  \u2022 ${it.name} (${it.qty}${it.unit}) \u2014 ${fmt(it.k)} kcal\n`);
+  else txt+='  (sin registros)\n';
+  txt+='\n';
+});
+txt+=`TOTAL DEL D\u00cdA: ${fmt(tot.k)} kcal | P ${fmt(tot.p)}g | G ${fmt(tot.f)}g | HC ${fmt(tot.car)}g\n`;
+txt+=`Progreso: ${Math.round(tot.k/goal*100)}% del objetivo\n\n\u00dALTIMOS 7 D\u00cdAS (desayuno/media/comida/cena):\n`;
+for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);const v=diary[key]||{};
+  const vals=MEALS.map(m=>fmt(v[m.id]||0)).join(' / ');
+  txt+=`${d.toLocaleDateString('es-ES')}: ${vals} kcal\n`;}
+return txt;
+}
+function buildHealthReport(){
+let txt=`RE-LATE NUTRICI\u00d3N \u2014 Registro cardiovascular\nGenerado: ${new Date().toLocaleString('es-ES')}\n\nFECHA | TA | PULSO | PESO\n`;
+vitals.forEach(v=>{txt+=`${new Date(v.date).toLocaleDateString('es-ES')} | ${v.sys?v.sys+'/'+v.dia:'--'} | ${v.pulse||'--'} | ${v.weight||'--'}\n`;});
+if(!vitals.length)txt+='(sin mediciones)\n';
+return txt;
+}
+function downloadTxt(content,name){const blob=new Blob([content],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
+$('#exportDownload').onclick=()=>{downloadTxt(buildReport(),'diario-relate-'+todayKey()+'.txt');toast('Descargado \u2B07\uFE0F');};
+$('#exportCopy').onclick=async()=>{try{await navigator.clipboard.writeText(buildReport());toast('Copiado \U0001F4CB');}catch(e){toast('No se pudo copiar');}};
+$('#exportShare').onclick=async()=>{const txt=buildReport();if(navigator.share){try{await navigator.share({title:'Diario Re-Late',text:txt});}catch(e){}}else{try{await navigator.clipboard.writeText(txt);toast('Compartido/copiado \U0001F4F2');}catch(e){toast('No disponible');}}};
+$('#exportHealth').onclick=async()=>{const txt=buildHealthReport();if(navigator.share){try{await navigator.share({title:'Registro cardiovascular',text:txt});}catch(e){}}else{downloadTxt(txt,'salud-relate-'+todayKey()+'.txt');toast('Descargado \u2B07\uFE0F');}};
+
+/* ================= RECETAS ================= */
+$('#recipeList').innerHTML=RECIPES.map(r=>`<div class="recipe-card"><h4>${r.t}</h4><p>${r.d}</p></div>`).join('');
+
+/* ================= TABS ================= */
+function switchTab(id){
 document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
 document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-document.getElementById('tab-'+tabId).classList.add('active');
-btn.classList.add('active');
-window.scrollTo({top:0});
-if(tabId==='hist') pintarHistorial();
+$('#'+id).classList.add('active');
+document.querySelector(`.tab-btn[data-tab="${id}"]`).classList.add('active');
 }
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 
-/* ---- Historial con localStorage ---- */
-function leerHistorial(){
-try{ return JSON.parse(localStorage.getItem(KEY_HIST)) || []; }
-catch(e){ return []; }
-}
-function guardarEnHistorial(d){
-const hist = leerHistorial();
-hist.unshift({
-fecha: new Date().toLocaleString('es-ES', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}),
-ts: Date.now(),
-r: d.r, edad: d.edad, pas: d.pas, pad: d.pad, chol: d.chol, tabaco: d.tabaco,
-imc: d.imc, cintura: d.cintura
-});
-localStorage.setItem(KEY_HIST, JSON.stringify(hist.slice(0,50))); // máx. 50 registros
-}
-function borrarHistorial(){
-if(confirm('¿Borrar todo el historial?')){
-localStorage.removeItem(KEY_HIST);
-pintarHistorial();
-}
-}
-function eliminarItem(i){
-const hist = leerHistorial();
-hist.splice(i,1);
-localStorage.setItem(KEY_HIST, JSON.stringify(hist));
-pintarHistorial();
-}
-function pintarHistorial(){
-const hist = leerHistorial();
-const cont = document.getElementById('listaHist');
-const btn = document.getElementById('btnBorrarHist');
-if(!hist.length){
-cont.innerHTML = 'Aún no has calculado ningún riesgo.';
-btn.style.display = 'none';
-document.getElementById('chartEvo').innerHTML = '';
-document.getElementById('chartMsg').style.display = 'block';
-return;
-}
-document.getElementById('chartMsg').style.display = 'none';
-cont.innerHTML = hist.map((h,i)=>{
-const color = h.r<=35 ? '#4ade80' : (h.r<=60 ? '#fbbf24' : '#f87171');
-const nivel = h.r<=35 ? 'Bajo' : (h.r<=60 ? 'Moderado' : 'Alto');
-return `<div class="hist-item">
-  <div class="hist-dot" style="background:${color}">${h.r}</div>
-  <div class="hist-info">
-    <div class="h-score">Riesgo ${nivel} · ${h.edad} años · ${h.pas}/${h.pad} mmHg${h.imc?' · IMC '+h.imc:''}${h.cintura?' · Cintura '+h.cintura+' cm':''}</div>
-    <div class="h-date">${h.fecha}${h.tabaco?' · 🚬 fumador/a':''}</div>
-  </div>
-  <button class="hist-del" onclick="eliminarItem(${i})">✕</button>
-</div>`;
-}).join('');
-btn.style.display = 'block';
-dibujarEvolucion(hist);
-}
+/* ================= MODO OSCURO ================= */
+$('#darkToggle').onclick=()=>{
+document.body.classList.toggle('dark');
+$('#darkToggle').textContent=document.body.classList.contains('dark')?'\u2600\uFE0F':'\U0001F319';
+save(); drawCharts();
+};
 
-/* ---- Gráfico de evolución (SVG puro) ---- */
-function dibujarEvolucion(hist){
-const svg = document.getElementById('chartEvo');
-const datos = hist.slice(0, 20).reverse(); // cronológico, máx. 20 puntos
-const W = 340, H = 200, m = {t:14, r:14, b:34, l:34};
-const iw = W - m.l - m.r, ih = H - m.t - m.b;
-
-// Escala Y común 0–100 para riesgo; IMC y cintura se normalizan a 0–100 relativo
-const y = v => m.t + ih - (v/100)*ih;
-const x = i => datos.length === 1 ? m.l + iw/2 : m.l + (i/(datos.length-1))*iw;
-
-let html = '';
-// rejilla horizontal + eje Y
-for(let g=0; g<=100; g+=25){
-html += `<line class="grid" x1="${m.l}" y1="${y(g)}" x2="${W-m.r}" y2="${y(g)}"/>`;
-html += `<text class="tick" x="${m.l-6}" y="${y(g)+3}" text-anchor="end">${g}</text>`;
-}
-// eje X
-html += `<line class="axis" x1="${m.l}" y1="${H-m.b}" x2="${W-m.r}" y2="${H-m.b}"/>`;
-// etiquetas de fecha (primera y última)
-const fmt = t => { const d=new Date(t); return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit'}); };
-if(datos.length){
-html += `<text class="tick" x="${m.l}" y="${H-m.b+16}" text-anchor="start">${fmt(datos[0].ts||Date.parse(datos[0].fecha))}</text>`;
-if(datos.length>1) html += `<text class="tick" x="${W-m.r}" y="${H-m.b+16}" text-anchor="end">${fmt(datos[datos.length-1].ts||Date.parse(datos[datos.length-1].fecha))}</text>`;
-}
-
-// normalizadores
-const normIMC = v => Math.max(0, Math.min(100, ((v-15)/(40-15))*100));   // IMC 15–40 → 0–100
-const normCint = v => Math.max(0, Math.min(100, ((v-60)/(140-60))*100)); // cintura 60–140 → 0–100
-
-function polylines(key, norm){
-const pts = datos.map((d,i)=>{
-  const v = d[key];
-  if(v==null || isNaN(v)) return null;
-  return `${x(i)},${y(norm(v))}`;
-}).filter(Boolean);
-return pts.length>1 ? pts.join(' ') : '';
-}
-
-const pr = polylines('r', v=>v);
-const pi = polylines('imc', normIMC);
-const pc = polylines('cintura', normCint);
-
-if(pr) html += `<polyline class="line-risk" points="${pr}"/>`;
-if(pi) html += `<polyline class="line-imc" points="${pi}"/>`;
-if(pc) html += `<polyline class="line-cint" points="${pc}"/>`;
-
-// puntos
-datos.forEach((d,i)=>{
-if(d.r!=null) html += `<circle class="dot dot-risk" cx="${x(i)}" cy="${y(d.r)}" r="3.5"><title>${d.fecha} · Riesgo ${d.r}</title></circle>`;
-if(d.imc!=null && !isNaN(d.imc)) html += `<circle class="dot dot-imc" cx="${x(i)}" cy="${y(normIMC(d.imc))}" r="3"><title>${d.fecha} · IMC ${d.imc}</title></circle>`;
-if(d.cintura!=null && !isNaN(d.cintura)) html += `<circle class="dot dot-cint" cx="${x(i)}" cy="${y(normCint(d.cintura))}" r="3"><title>${d.fecha} · Cintura ${d.cintura} cm</title></circle>`;
-});
-
-svg.innerHTML = html;
-}
-
-/* ---- Clasificación del IMC ---- */
-function clasificarIMC(imc){
-if(imc < 18.5) return {txt:'Bajo peso', color:'#38bdf8'};
-if(imc < 25)   return {txt:'Normopeso', color:'#4ade80'};
-if(imc < 30)   return {txt:'Sobrepeso', color:'#fbbf24'};
-return {txt:'Obesidad', color:'#f87171'};
-}
-
-/* ---- Clasificación de la cintura (OMS/SECF) ---- */
-function clasificarCintura(c, sexo){
-if(!c || isNaN(c)) return null;
-const umbralAlerta = sexo === 'H' ? 102 : 88;   // alto riesgo
-const umbralRiesgo = sexo === 'H' ? 94 : 80;    // riesgo aumentado
-if(c >= umbralAlerta) return {txt:'Circunferencia alta', color:'#f87171', riesgo:true};
-if(c >= umbralRiesgo) return {txt:'Circunferencia aumentada', color:'#fbbf24', riesgo:true};
-return {txt:'Circunferencia normal', color:'#4ade80', riesgo:false};
-}
-
-function calcular(){
-const edad = +document.getElementById('edad').value;
-const sexo = document.getElementById('sexo').value;
-const peso = +document.getElementById('peso').value;
-const talla = +document.getElementById('talla').value;
-const cintura = +document.getElementById('cintura').value;
-const pas = +document.getElementById('pas').value;
-const pad = +document.getElementById('pad').value;
-const chol = +document.getElementById('chol').value;
-const gluc = +document.getElementById('gluc').value;
-const tabaco = document.getElementById('tabaquismo').checked;
-const dieta = +document.getElementById('dieta').value;
-const ej1 = +document.getElementById('ej1').value;
-const ej2 = +document.getElementById('ej2').value;
-const stress = +document.getElementById('stress').value;
-
-/* IMC */
-let imc = 0, sIMC = 0, catIMC = null;
-if(peso > 0 && talla > 0){
-const m = talla / 100;
-imc = Math.round((peso / (m*m)) * 10) / 10;
-catIMC = clasificarIMC(imc);
-if(imc < 18.5) sIMC = Math.min(100, (18.5 - imc) * 12);
-else if(imc <= 24.9) sIMC = 0;
-else sIMC = Math.min(100, (imc - 24.9) * 8);
-}
-
-/* Cintura */
-let cInt = cintura > 0 ? cintura : 0;
-let sCint = 0, catCint = clasificarCintura(cInt, sexo);
-if(catCint){
-const umbral = sexo === 'H' ? 94 : 80;
-if(cInt <= umbral) sCint = 0;
-else sCint = Math.min(100, (cInt - umbral) * 3.2);
-}
-
-let sEdad = Math.min(100, Math.max(0, (edad - 20) * 1.4));
-let riesgoPas = Math.min(100, Math.max(0, (pas - 110) * 1.2));
-let riesgoPad = Math.min(100, Math.max(0, (pad - 70) * 2.0));
-let sPas = (riesgoPas + riesgoPad) / 2;
-let sChol = Math.min(100, Math.max(0, (chol - 160) * 0.9));
-let sGluc = Math.min(100, Math.max(0, (gluc - 90) * 1.1)) + (tabaco ? 25 : 0);
-sGluc = Math.min(100, sGluc);
-let sEstilo = Math.min(100, Math.max(0, stress * 8 + (100 - dieta) * 0.25));
-let sEjerc = Math.min(100, Math.max(0, 100 - (ej1 * 8 + ej2 * 12)));
-
-const total = sPas*0.20 + sEstilo*0.18 + sChol*0.16 + sEjerc*0.12 + sEdad*0.12 + sIMC*0.12 + sCint*0.10;
-const r = Math.round(total);
-
-ultimoResultado = {r, sEdad, sPas, sChol, sGluc, sEstilo, sEjerc, sIMC, sCint, imc, catIMC: catIMC?catIMC.txt:'', cInt, catCint: catCint?catCint.txt:'', edad, sexo, peso, talla, cintura: cInt, pas, pad, chol, gluc, tabaco, dieta, ej1, ej2, stress};
-guardarEnHistorial(ultimoResultado);
-
-const badge = document.getElementById('badge');
-const desc = document.getElementById('desc');
-let nivel, cls, msg;
-if(r <= 35){ nivel='BAJO'; cls='b-green'; msg='Perfil de riesgo favorable. Mantén tus hábitos actuales.'; }
-else if(r <= 60){ nivel='MODERADO'; cls='b-amber'; msg='Riesgo intermedio. Revisa presión, colesterol, peso y aumenta la actividad física.'; }
-else { nivel='ALTO'; cls='b-red'; msg='Riesgo elevado. Se recomienda consultar con tu médico.'; }
-badge.textContent = nivel + ' (' + r + '/100)';
-badge.className = 'badge ' + cls;
-badge.style.display = 'inline-block';
-desc.innerHTML = msg;
-document.getElementById('scoreBig').textContent = r;
-
-document.getElementById('detalle').innerHTML = `
-<div>🩺 Presión arterial: <b>${Math.round(sPas)}/100</b></div>
-<div>🧠 Estilo de vida: <b>${Math.round(sEstilo)}/100</b></div>
-<div>🫀 Colesterol: <b>${Math.round(sChol)}/100</b></div>
-<div>🏃 Ejercicio: <b>${Math.round(sEjerc)}/100</b></div>
-<div>⚖️ IMC: <b>${Math.round(sIMC)}/100</b></div>
-<div>📏 Cintura: <b>${Math.round(sCint)}/100</b></div>
-<div>⏳ Edad: <b>${Math.round(sEdad)}/100</b></div>
-${imc ? `<div class="imc-line">Tu IMC: <b>${imc}</b> · <span class="imc-tag" style="background:${catIMC.color}">${catIMC.txt}</span></div>` : ''}
-${catCint ? `<div class="imc-line">Tu cintura: <b>${cInt} cm</b> · <span class="imc-tag" style="background:${catCint.color}">${catCint.txt}</span></div>` : ''}`;
-
-dibujarGauge(r);
-if(navigator.vibrate) navigator.vibrate(30);
-}
-
-function polar(cx, cy, R, deg){
-const a = (deg - 180) * Math.PI / 180;
-return [cx + R * Math.cos(a), cy + R * Math.sin(a)];
-}
-function arcPath(cx, cy, R, d1, d2){
-const [x1,y1] = polar(cx, cy, R, d1);
-const [x2,y2] = polar(cx, cy, R, d2);
-return `M ${x1} ${y1} A ${R} ${R} 0 0 1 ${x2} ${y2}`;
-}
-
-function dibujarGauge(valor){
-const svg = document.getElementById('gauge');
-const cx = 160, cy = 160, R = 120;
-const zonas = [
-{d1:0, d2:63, color:'#4ade80'},
-{d1:63, d2:117, color:'#fbbf24'},
-{d1:117, d2:180, color:'#f87171'}
-];
-let html = zonas.map(z=>`<path d="${arcPath(cx,cy,R,z.d1,z.d2)}" stroke="${z.color}" stroke-width="26" fill="none" stroke-linecap="butt"/>`).join('');
-const ang = (valor/100) * 180;
-const [nx,ny] = polar(cx, cy, R-20, ang);
-html += `<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#e2e8f0" stroke-width="4" stroke-linecap="round"/>`;
-html += `<circle cx="${cx}" cy="${cy}" r="8" fill="#e2e8f0"/>`;
-html += `<text x="${cx-R-6}" y="${cy+6}" fill="#94a3b8" font-size="12">0</text>`;
-html += `<text x="${cx+R-8}" y="${cy+6}" fill="#94a3b8" font-size="12">100</text>`;
-svg.innerHTML = html;
-}
-
-function generarPDF(){
-if(!ultimoResultado){ alert('Primero calcula el riesgo.'); return; }
-const d = ultimoResultado;
-const fecha = new Date().toLocaleDateString('es-ES', {year:'numeric', month:'long', day:'numeric'});
-const nivel = d.r <= 35 ? 'BAJO' : (d.r <= 60 ? 'MODERADO' : 'ALTO');
-document.getElementById('report').innerHTML = `
-<h1>Re-Late · Informe de Riesgo Cardiovascular</h1>
-<p><b>Fecha:</b> ${fecha} &nbsp; | &nbsp; <b>Puntuación:</b> ${d.r}/100 &nbsp; | &nbsp; <b>Nivel:</b> ${nivel}</p>
-<table>
-  <tr><th>Parámetro</th><th>Valor</th></tr>
-  <tr><td>Edad</td><td>${d.edad} años (${d.sexo==='H'?'Hombre':'Mujer'})</td></tr>
-  <tr><td>Peso</td><td>${d.peso} kg</td></tr>
-  <tr><td>Talla</td><td>${d.talla} cm</td></tr>
-  <tr><td>IMC</td><td>${d.imc} (${d.catIMC||'—'})</td></tr>
-  <tr><td>Circunferencia de cintura</td><td>${d.cintura||'—'} cm (${d.catCint||'—'})</td></tr>
-  <tr><td>Presión sistólica</td><td>${d.pas} mmHg</td></tr>
-  <tr><td>Presión diastólica</td><td>${d.pad} mmHg</td></tr>
-  <tr><td>Colesterol total</td><td>${d.chol} mg/dL</td></tr>
-  <tr><td>Glucemia basal</td><td>${d.gluc} mg/dL</td></tr>
-  <tr><td>Tabaquismo</td><td>${d.tabaco?'Sí':'No'}</td></tr>
-  <tr><td>Dieta saludable</td><td>${d.dieta}% adherencia</td></tr>
-  <tr><td>Ejercicio suave</td><td>${d.ej1} días/semana</td></tr>
-  <tr><td>Ejercicio fuerza</td><td>${d.ej2} días/semana</td></tr>
-  <tr><td>Estrés</td><td>${d.stress}/10</td></tr>
-</table>
-<table>
-  <tr><th>Bloque</th><th>Puntuación de riesgo</th></tr>
-  <tr><td>Presión arterial</td><td>${Math.round(d.sPas)}/100</td></tr>
-  <tr><td>Estilo de vida</td><td>${Math.round(d.sEstilo)}/100</td></tr>
-  <tr><td>Colesterol</td><td>${Math.round(d.sChol)}/100</td></tr>
-  <tr><td>Ejercicio</td><td>${Math.round(d.sEjerc)}/100</td></tr>
-  <tr><td>IMC</td><td>${Math.round(d.sIMC)}/100</td></tr>
-  <tr><td>Cintura</td><td>${Math.round(d.sCint)}/100</td></tr>
-  <tr><td>Edad</td><td>${Math.round(d.sEdad)}/100</td></tr>
-</table>
-<p><b>Interpretación:</b> ${nivel==='BAJO'?'Perfil favorable, mantén tus hábitos.':(nivel==='MODERADO'?'Riesgo intermedio: revisa presión, colesterol, peso y actividad física.':'Riesgo elevado: se recomienda consulta médica.')}</p>
-<p style="font-size:.8rem;color:#666">Herramienta orientativa. No sustituye el criterio médico profesional. — Miguel Ángel Layunta López</p>
-`;
-window.print();
-}
-
-function reset(){
-document.querySelectorAll('input[type=number]').forEach(i=>i.value='');
-document.getElementById('dieta').value = 70; dietav.textContent = '70';
-document.getElementById('ej1').value = 2; e1v.textContent = '2';
-document.getElementById('ej2').value = 1; e2v.textContent = '1';
-document.getElementById('stress').value = 4; stv.textContent = '4';
-document.getElementById('tabaquismo').checked = false;
-document.getElementById('badge').style.display='none';
-document.getElementById('scoreBig').textContent='—';
-document.getElementById('desc').textContent='Rellena los datos y pulsa Calcular.';
-document.getElementById('detalle').textContent='Sin datos todavía.';
-document.getElementById('gauge').innerHTML='';
-ultimoResultado = null;
-}
-
-/* ---- PWA: instalación e historial inicial ---- */
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e=>{
-e.preventDefault();
-deferredPrompt = e;
-document.getElementById('installBanner').style.display = 'flex';
-});
-document.getElementById('btnInstall').addEventListener('click', async ()=>{
-if(!deferredPrompt) return;
-deferredPrompt.prompt();
-const {outcome} = await deferredPrompt.userChoice;
-if(outcome==='accepted') document.getElementById('installBanner').style.display='none';
-deferredPrompt = null;
-});
-window.addEventListener('appinstalled', ()=>{
-document.getElementById('installBanner').style.display = 'none';
-});
-pintarHistorial();
+/* ================= INIT ================= */
+$('#foodSearch').addEventListener('input',renderFoods);
+load();
+$('#darkToggle').textContent=document.body.classList.contains('dark')?'\u2600\uFE0F':'\U0001F319';
+renderChips();renderFoods();renderPrepared();renderMeals();renderDiary();renderVitals();
 </script>
 </body>
 </html>
