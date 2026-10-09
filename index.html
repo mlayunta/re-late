@@ -184,8 +184,12 @@ font-family:Georgia, serif; color:#000; background:#fff}
   <div><label>Sistólica (mmHg)</label><input type="number" id="pas" min="80" max="250" value="130" inputmode="numeric"></div>
   <div><label>Diastólica (mmHg)</label><input type="number" id="pad" min="50" max="150" value="80" inputmode="numeric"></div>
 </div>
-<label>Colesterol total (mg/dL)</label>
-<input type="number" id="chol" min="100" max="400" value="200" inputmode="numeric">
+<div class="row">
+  <div><label>Colesterol total (mg/dL)</label><input type="number" id="chol" min="100" max="400" value="200" inputmode="numeric"></div>
+  <div><label>Colesterol HDL (mg/dL)</label><input type="number" id="hdl" min="20" max="150" value="50" inputmode="numeric"></div>
+</div>
+<div id="nohdlLine" class="imc-line" style="margin-top:6px">Colesterol no HDL (total − HDL): <b>—</b></div>
+<div style="font-size:.72rem; color:var(--muted); line-height:1.4; margin-top:4px">El riesgo se calcula con el <b>colesterol no HDL</b>. Objetivo orientativo: &lt;130 mg/dL.</div>
 <label>Glucemia basal (mg/dL)</label>
 <input type="number" id="gluc" min="60" max="300" value="95" inputmode="numeric">
 <div class="check"><input type="checkbox" id="tabaquismo"><label for="tabaquismo">Fumador/a</label></div>
@@ -248,7 +252,7 @@ font-family:Georgia, serif; color:#000; background:#fff}
 </div>
 <div class="tip-card">
   <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M22 32h20M32 22v20" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="32" r="14" stroke="#2dd4bf" stroke-width="3" fill="none"/></svg></div>
-  <div class="tip-text"><h3>Colesterol y glucemia</h3><p>LDL <span class="highlight">&lt;115 mg/dL</span> y glucemia en ayunas &lt;100 mg/dL. Analítica anual y dieta equilibrada.</p></div>
+  <div class="tip-text"><h3>Colesterol no HDL y glucemia</h3><p>El <span class="highlight">colesterol no HDL</span> (total − HDL) debe estar por debajo de <span class="highlight">130 mg/dL</span> y la glucemia en ayunas &lt;100 mg/dL. Analítica anual y dieta equilibrada.</p></div>
 </div>
 <div class="tip-card">
   <div class="tip-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M32 20c-4 0-7 3-7 7 0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" fill="#c084fc"/><path d="M26 42c0 3 3 5 6 5s6-2 6-5" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/></svg></div>
@@ -326,7 +330,7 @@ const hist = leerHistorial();
 hist.unshift({
 fecha: new Date().toLocaleString('es-ES', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}),
 ts: Date.now(),
-r: d.r, edad: d.edad, pas: d.pas, pad: d.pad, chol: d.chol, tabaco: d.tabaco,
+r: d.r, edad: d.edad, pas: d.pas, pad: d.pad, chol: d.chol, hdl: d.hdl, nohdl: d.nohdl, tabaco: d.tabaco,
 imc: d.imc, cintura: d.cintura
 });
 localStorage.setItem(KEY_HIST, JSON.stringify(hist.slice(0,50))); // máx. 50 registros
@@ -361,7 +365,7 @@ const nivel = h.r<=35 ? 'Bajo' : (h.r<=60 ? 'Moderado' : 'Alto');
 return `<div class="hist-item">
   <div class="hist-dot" style="background:${color}">${h.r}</div>
   <div class="hist-info">
-    <div class="h-score">Riesgo ${nivel} · ${h.edad} años · ${h.pas}/${h.pad} mmHg${h.imc?' · IMC '+h.imc:''}${h.cintura?' · Cintura '+h.cintura+' cm':''}</div>
+    <div class="h-score">Riesgo ${nivel} · ${h.edad} años · ${h.pas}/${h.pad} mmHg${h.imc?' · IMC '+h.imc:''}${h.cintura?' · Cintura '+h.cintura+' cm':''}${h.nohdl?' · no HDL '+h.nohdl:''}</div>
     <div class="h-date">${h.fecha}${h.tabaco?' · 🚬 fumador/a':''}</div>
   </div>
   <button class="hist-del" onclick="eliminarItem(${i})">✕</button>
@@ -446,6 +450,31 @@ if(c >= umbralRiesgo) return {txt:'Circunferencia aumentada', color:'#fbbf24', r
 return {txt:'Circunferencia normal', color:'#4ade80', riesgo:false};
 }
 
+/* ---- Clasificación del colesterol no HDL (total - HDL) ---- */
+function clasificarNoHDL(v){
+if(v==null || isNaN(v)) return null;
+if(v < 130) return {txt:'No HDL óptimo', color:'#4ade80'};
+if(v < 160) return {txt:'No HDL aumentado', color:'#fbbf24'};
+return {txt:'No HDL alto', color:'#f87171'};
+}
+
+/* ---- Cálculo en vivo del no HDL (feedback inmediato al escribir) ---- */
+function actualizarNoHDL(){
+const chol = +document.getElementById('chol').value;
+const hdl = +document.getElementById('hdl').value;
+const el = document.getElementById('nohdlLine');
+if(!chol || chol<=0){
+el.innerHTML = 'Colesterol no HDL (total − HDL): <b>—</b>';
+return;
+}
+const nohdl = Math.max(0, Math.round(chol - (hdl>0?hdl:0)));
+const cat = clasificarNoHDL(nohdl);
+el.innerHTML = `Colesterol no HDL (total − HDL): <b>${nohdl} mg/dL</b>${cat?` · <span class="imc-tag" style="background:${cat.color}">${cat.txt}</span>`:''}`;
+}
+document.getElementById('chol').addEventListener('input', actualizarNoHDL);
+document.getElementById('hdl').addEventListener('input', actualizarNoHDL);
+actualizarNoHDL();
+
 function calcular(){
 const edad = +document.getElementById('edad').value;
 const sexo = document.getElementById('sexo').value;
@@ -455,6 +484,7 @@ const cintura = +document.getElementById('cintura').value;
 const pas = +document.getElementById('pas').value;
 const pad = +document.getElementById('pad').value;
 const chol = +document.getElementById('chol').value;
+const hdl = +document.getElementById('hdl').value;
 const gluc = +document.getElementById('gluc').value;
 const tabaco = document.getElementById('tabaquismo').checked;
 const dieta = +document.getElementById('dieta').value;
@@ -482,11 +512,19 @@ if(cInt <= umbral) sCint = 0;
 else sCint = Math.min(100, (cInt - umbral) * 3.2);
 }
 
+/* Colesterol no HDL = total - HDL */
+let noHdl = null, sChol = 0, catNoHdl = null;
+if(chol > 0){
+noHdl = Math.max(0, Math.round(chol - (hdl>0?hdl:0)));
+catNoHdl = clasificarNoHDL(noHdl);
+// Riesgo a partir de 130 mg/dL (umbral de no HDL en guías)
+sChol = Math.min(100, Math.max(0, (noHdl - 130) * 1.1));
+}
+
 let sEdad = Math.min(100, Math.max(0, (edad - 20) * 1.4));
 let riesgoPas = Math.min(100, Math.max(0, (pas - 110) * 1.2));
 let riesgoPad = Math.min(100, Math.max(0, (pad - 70) * 2.0));
 let sPas = (riesgoPas + riesgoPad) / 2;
-let sChol = Math.min(100, Math.max(0, (chol - 160) * 0.9));
 let sGluc = Math.min(100, Math.max(0, (gluc - 90) * 1.1)) + (tabaco ? 25 : 0);
 sGluc = Math.min(100, sGluc);
 let sEstilo = Math.min(100, Math.max(0, stress * 8 + (100 - dieta) * 0.25));
@@ -495,14 +533,14 @@ let sEjerc = Math.min(100, Math.max(0, 100 - (ej1 * 8 + ej2 * 12)));
 const total = sPas*0.20 + sEstilo*0.18 + sChol*0.16 + sEjerc*0.12 + sEdad*0.12 + sIMC*0.12 + sCint*0.10;
 const r = Math.round(total);
 
-ultimoResultado = {r, sEdad, sPas, sChol, sGluc, sEstilo, sEjerc, sIMC, sCint, imc, catIMC: catIMC?catIMC.txt:'', cInt, catCint: catCint?catCint.txt:'', edad, sexo, peso, talla, cintura: cInt, pas, pad, chol, gluc, tabaco, dieta, ej1, ej2, stress};
+ultimoResultado = {r, sEdad, sPas, sChol, sGluc, sEstilo, sEjerc, sIMC, sCint, imc, catIMC: catIMC?catIMC.txt:'', cInt, catCint: catCint?catCint.txt:'', edad, sexo, peso, talla, cintura: cInt, pas, pad, chol, hdl, noHdl, catNoHdl: catNoHdl?catNoHdl.txt:'', gluc, tabaco, dieta, ej1, ej2, stress};
 guardarEnHistorial(ultimoResultado);
 
 const badge = document.getElementById('badge');
 const desc = document.getElementById('desc');
 let nivel, cls, msg;
 if(r <= 35){ nivel='BAJO'; cls='b-green'; msg='Perfil de riesgo favorable. Mantén tus hábitos actuales.'; }
-else if(r <= 60){ nivel='MODERADO'; cls='b-amber'; msg='Riesgo intermedio. Revisa presión, colesterol, peso y aumenta la actividad física.'; }
+else if(r <= 60){ nivel='MODERADO'; cls='b-amber'; msg='Riesgo intermedio. Revisa presión, colesterol no HDL, peso y aumenta la actividad física.'; }
 else { nivel='ALTO'; cls='b-red'; msg='Riesgo elevado. Se recomienda consultar con tu médico.'; }
 badge.textContent = nivel + ' (' + r + '/100)';
 badge.className = 'badge ' + cls;
@@ -513,13 +551,14 @@ document.getElementById('scoreBig').textContent = r;
 document.getElementById('detalle').innerHTML = `
 <div>🩺 Presión arterial: <b>${Math.round(sPas)}/100</b></div>
 <div>🧠 Estilo de vida: <b>${Math.round(sEstilo)}/100</b></div>
-<div>🫀 Colesterol: <b>${Math.round(sChol)}/100</b></div>
+<div>🫀 Colesterol no HDL: <b>${Math.round(sChol)}/100</b>${noHdl!=null?` <span style="font-size:.8rem">(${noHdl} mg/dL)</span>`:''}</div>
 <div>🏃 Ejercicio: <b>${Math.round(sEjerc)}/100</b></div>
 <div>⚖️ IMC: <b>${Math.round(sIMC)}/100</b></div>
 <div>📏 Cintura: <b>${Math.round(sCint)}/100</b></div>
 <div>⏳ Edad: <b>${Math.round(sEdad)}/100</b></div>
 ${imc ? `<div class="imc-line">Tu IMC: <b>${imc}</b> · <span class="imc-tag" style="background:${catIMC.color}">${catIMC.txt}</span></div>` : ''}
-${catCint ? `<div class="imc-line">Tu cintura: <b>${cInt} cm</b> · <span class="imc-tag" style="background:${catCint.color}">${catCint.txt}</span></div>` : ''}`;
+${catCint ? `<div class="imc-line">Tu cintura: <b>${cInt} cm</b> · <span class="imc-tag" style="background:${catCint.color}">${catCint.txt}</span></div>` : ''}
+${catNoHdl ? `<div class="imc-line">Tu colesterol no HDL: <b>${noHdl} mg/dL</b> (total ${chol} − HDL ${hdl||0}) · <span class="imc-tag" style="background:${catNoHdl.color}">${catNoHdl.txt}</span></div>` : ''}`;
 
 dibujarGauge(r);
 if(navigator.vibrate) navigator.vibrate(30);
@@ -571,6 +610,8 @@ document.getElementById('report').innerHTML = `
   <tr><td>Presión sistólica</td><td>${d.pas} mmHg</td></tr>
   <tr><td>Presión diastólica</td><td>${d.pad} mmHg</td></tr>
   <tr><td>Colesterol total</td><td>${d.chol} mg/dL</td></tr>
+  <tr><td>Colesterol HDL</td><td>${d.hdl||'—'} mg/dL</td></tr>
+  <tr><td><b>Colesterol no HDL</b> (total − HDL)</td><td><b>${d.noHdl!=null?d.noHdl+' mg/dL':'—'}</b> (${d.catNoHdl||'—'})</td></tr>
   <tr><td>Glucemia basal</td><td>${d.gluc} mg/dL</td></tr>
   <tr><td>Tabaquismo</td><td>${d.tabaco?'Sí':'No'}</td></tr>
   <tr><td>Dieta saludable</td><td>${d.dieta}% adherencia</td></tr>
@@ -582,13 +623,13 @@ document.getElementById('report').innerHTML = `
   <tr><th>Bloque</th><th>Puntuación de riesgo</th></tr>
   <tr><td>Presión arterial</td><td>${Math.round(d.sPas)}/100</td></tr>
   <tr><td>Estilo de vida</td><td>${Math.round(d.sEstilo)}/100</td></tr>
-  <tr><td>Colesterol</td><td>${Math.round(d.sChol)}/100</td></tr>
+  <tr><td>Colesterol no HDL</td><td>${Math.round(d.sChol)}/100</td></tr>
   <tr><td>Ejercicio</td><td>${Math.round(d.sEjerc)}/100</td></tr>
   <tr><td>IMC</td><td>${Math.round(d.sIMC)}/100</td></tr>
   <tr><td>Cintura</td><td>${Math.round(d.sCint)}/100</td></tr>
   <tr><td>Edad</td><td>${Math.round(d.sEdad)}/100</td></tr>
 </table>
-<p><b>Interpretación:</b> ${nivel==='BAJO'?'Perfil favorable, mantén tus hábitos.':(nivel==='MODERADO'?'Riesgo intermedio: revisa presión, colesterol, peso y actividad física.':'Riesgo elevado: se recomienda consulta médica.')}</p>
+<p><b>Interpretación:</b> ${nivel==='BAJO'?'Perfil favorable, mantén tus hábitos.':(nivel==='MODERADO'?'Riesgo intermedio: revisa presión, colesterol no HDL, peso y actividad física.':'Riesgo elevado: se recomienda consulta médica.')}</p>
 <p style="font-size:.8rem;color:#666">Herramienta orientativa. No sustituye el criterio médico profesional. — Miguel Ángel Layunta López</p>
 `;
 window.print();
@@ -606,6 +647,7 @@ document.getElementById('scoreBig').textContent='—';
 document.getElementById('desc').textContent='Rellena los datos y pulsa Calcular.';
 document.getElementById('detalle').textContent='Sin datos todavía.';
 document.getElementById('gauge').innerHTML='';
+actualizarNoHDL();
 ultimoResultado = null;
 }
 
@@ -627,6 +669,6 @@ window.addEventListener('appinstalled', ()=>{
 document.getElementById('installBanner').style.display = 'none';
 });
 pintarHistorial();
-</script>
+</script
 </body>
-</html>
+  </html>
