@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Re-Late">
+<title>Re-Late · Riesgo Cardiovascular</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<style>
+:root{
+--bg:#0f172a; --card:#1e293b; --accent:#f87171; --blue:#38bdf8; --green:#4ade80;
+--amber:#fbbf24; --red:#f87171; --text:#e2e8f0; --muted:#94a3b8; --line:#334155;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{
+font-family:"Segoe UI", system-ui, sans-serif; background:var(--bg); color:var(--text);
+padding:14px 14px calc(84px + env(safe-area-inset-bottom)); max-width:520px; margin:0 auto;
+overscroll-behavior-y:none;
+}
+header{text-align:center; padding:10px 0 16px}
+h1{margin:0; color:var(--accent); font-size:1.9rem; letter-spacing:.5px}
+h1 span{color:var(--blue)}
+.subtitle{color:var(--muted); font-size:.85rem; margin-top:4px}
+.author{font-size:.75rem; color:var(--blue); font-weight:600; margin-top:6px}
+.card{background:var(--card); border-radius:16px; padding:18px; margin-bottom:14px;
+box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.card h2{margin:0 0 12px; font-size:1rem; color:var(--blue); border-bottom:2px solid var(--line); padding-bottom:8px}
+label{display:block; font-size:.8rem; font-weight:600; margin:12px 0 4px}
+input[type=number], select{
+width:100%; padding:12px; border:1px solid var(--line); border-radius:10px;
+font-size:1rem; background:#0f172a; color:var(--text);
+}
+input[type=number]:focus, select:focus{outline:none; border-color:var(--blue)}
+.row{display:flex; gap:10px}
+.row>div{flex:1}
+.check{display:flex; align-items:center; gap:10px; margin-top:14px; font-size:.95rem}
+.check input{width:24px; height:24px; accent-color:var(--accent)}
+.check label{margin:0}
+.slider-val{font-weight:700; color:var(--accent)}
+input[type=range]{width:100%; accent-color:var(--accent); height:34px}
+.btns{display:flex; gap:10px; margin-top:16px}
+button{border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer;
+padding:14px; transition:transform .1s, opacity .2s}
+button:active{transform:scale(.96)}
+.btn-calc{flex:1; background:var(--blue); color:#04121f}
+.btn-pdf{flex:1; background:var(--accent); color:#fff}
+.btn-reset{flex:0 0 84px; background:var(--line); color:var(--muted)}
+.gauge-wrap{text-align:center}
+.gauge-wrap svg{width:100%; max-width:320px}
+.score-big{font-size:2.3rem; font-weight:800; margin-top:-14px}
+.badge{display:inline-block; padding:6px 16px; border-radius:20px; color:#04121f; font-weight:800; margin-top:6px}
+.b-green{background:var(--green)} .b-amber{background:var(--amber)} .b-red{background:var(--red)}
+.desc{margin-top:12px; font-size:.88rem; color:var(--muted); line-height:1.5}
+#detalle{font-size:.9rem; line-height:2; color:var(--muted)}
+#detalle b{color:var(--text)}
+.imc-line{margin-top:10px; font-size:.9rem; color:var(--muted)}
+.imc-line b{color:var(--text)}
+.imc-tag{display:inline-block; padding:3px 12px; border-radius:14px; font-size:.78rem; font-weight:800; color:#04121f; margin-left:6px}
+.tabbar{
+position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:8px;
+padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+background:rgba(15,23,42,.92); backdrop-filter:blur(8px); border-top:1px solid var(--line); z-index:10;
+}
+.tab-btn{
+flex:1; max-width:200px; display:flex; flex-direction:column; align-items:center; gap:2px;
+padding:8px; border-radius:12px; background:transparent; color:var(--muted); font-size:.8rem; font-weight:700;
+}
+.tab-btn svg{width:24px; height:24px}
+.tab-btn.active{background:var(--blue); color:#04121f}
+.tab-content{display:none; animation:fade .25s}
+.tab-content.active{display:block}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1}}
+.tips-grid{display:grid; gap:12px}
+.tip-card{background:var(--card); border-radius:16px; padding:16px; display:flex; gap:14px; align-items:flex-start}
+.tip-icon{flex-shrink:0; width:52px; height:52px; border-radius:12px; display:flex; align-items:center;
+justify-content:center; background:rgba(56,189,248,.12)}
+.tip-icon svg{width:32px; height:32px}
+.tip-text h3{margin:0 0 4px; font-size:.95rem; color:var(--blue)}
+.tip-text p{margin:0; font-size:.85rem; color:var(--muted); line-height:1.5}
+.tip-text .highlight{color:var(--accent); font-weight:700}
+footer{text-align:center; color:var(--muted); font-size:.72rem; padding:8px 0 16px}
+#installBanner{
+display:none; position:fixed; left:12px; right:12px;
+bottom:calc(88px + env(safe-area-inset-bottom)); background:var(--card); border:1px solid var(--blue);
+border-radius:14px; padding:12px 14px; z-index:20; align-items:center; gap:10px;
+box-shadow:0 8px 24px rgba(0,0,0,.5); font-size:.85rem;
+}
+#installBanner button{padding:8px 14px; background:var(--blue); color:#04121f; font-size:.85rem; flex:0 0 auto}
+.hist-item{background:var(--card); border-radius:14px; padding:14px 16px; margin-bottom:10px;
+display:flex; align-items:center; gap:14px}
+.hist-dot{width:44px; height:44px; border-radius:50%; flex-shrink:0; display:flex; align-items:center;
+justify-content:center; font-weight:800; color:#04121f; font-size:1rem}
+.hist-info{flex:1}
+.hist-info .h-score{font-weight:700; color:var(--text); font-size:.95rem}
+.hist-info .h-date{font-size:.75rem; color:var(--muted)}
+.hist-del{background:transparent; color:var(--muted); padding:8px; flex:0 0 auto; font-size:1.1rem}
+#btnBorrarHist{background:var(--line); color:var(--muted); width:100%; margin-top:6px; font-size:.85rem}
+.chart-card{margin-bottom:14px}
+.chart-card h2{margin:0 0 10px; font-size:1rem; color:var(--blue); border-bottom:2px solid var(--line); padding-bottom:8px}
+.chart-legend{display:flex; flex-wrap:wrap; gap:14px; margin-bottom:10px; font-size:.78rem; color:var(--muted)}
+.chart-legend .lg{display:flex; align-items:center; gap:6px}
+.chart-legend .lg i{width:14px; height:3px; border-radius:2px; display:inline-block}
+#chartEvo{width:100%; height:auto; display:block}
+#chartEvo .axis{stroke:var(--line); stroke-width:1}
+#chartEvo .grid{stroke:var(--line); stroke-width:1; stroke-dasharray:3 4; opacity:.6}
+#chartEvo .tick{fill:var(--muted); font-size:10px}
+#chartEvo .line-risk{stroke:var(--accent); stroke-width:2.5; fill:none; stroke-linejoin:round; stroke-linecap:round}
+#chartEvo .line-imc{stroke:var(--blue); stroke-width:2; fill:none; stroke-dasharray:5 4; stroke-linejoin:round}
+#chartEvo .line-cint{stroke:var(--green); stroke-width:2; fill:none; stroke-dasharray:2 4; stroke-linejoin:round}
+#chartEvo .dot{stroke:var(--bg); stroke-width:1.5}
+#chartEvo .dot-risk{fill:var(--accent)}
+#chartEvo .dot-imc{fill:var(--blue)}
+#chartEvo .dot-cint{fill:var(--green)}
+#splash{
+position:fixed; inset:0; background:var(--bg); z-index:100; display:flex; flex-direction:column;
+align-items:center; justify-content:center; gap:14px; text-align:center; padding:24px;
+transition:opacity .4s;
+}
+#splash.hide{opacity:0; pointer-events:none}
+#splash .heart{width:110px; height:110px; animation:beat 1.1s infinite}
+@keyframes beat{0%,100%{transform:scale(1)} 25%{transform:scale(1.12)} 40%{transform:scale(1)} 55%{transform:scale(1.08)}}
+#splash h1{color:var(--accent); font-size:2.4rem; margin:0}
+#splash h1 span{color:var(--blue)}
+#splash p{color:var(--muted); font-size:.9rem; margin:0; max-width:300px; line-height:1.5}
+#splash .firm{color:var(--blue); font-weight:700; font-size:.85rem; margin-top:8px}
+#report{display:none}
+@media print{
+body *{visibility:hidden}
+#report, #report *{visibility:visible}
+#report{display:block; position:absolute; left:0; top:0; width:100%; padding:24px;
+font-family:Georgia, serif; color:#000; background:#fff}
+#report table{width:100%; border-collapse:collapse; margin:14px 0}
+#report td, #report th{border:1px solid #999; padding:8px; font-size:.9rem; text-align:left}
+#report th{background:#f0f0f0}
+}
+.link-card{background:var(--card); border-radius:16px; padding:16px; margin-top:12px; border:1px solid var(--line)}
+.link-card h3{margin:0 0 10px; font-size:1rem; color:var(--blue)}
+.link-list{list-style:none; padding:0; margin:0; display:grid; gap:8px}
+.link-list a{color:var(--text); text-decoration:none; font-size:.85rem; display:flex; align-items:center; gap:8px}
+.link-list a:hover{color:var(--blue)}
+
+/* ===== NUEVO: geolocalización + SOS 112 ===== */
+.sos-card{border:1px solid rgba(248,113,113,.45)}
+.sos-card h2{color:var(--red)}
+.geo-status{font-size:.85rem; color:var(--muted); margin-top:10px; line-height:1.5; min-height:1.3em}
+.geo-coords{font-weight:700; color:var(--green); word-break:break-all}
+.geo-links{display:none; gap:10px; margin-top:10px; flex-wrap:wrap}
+.geo-links a{flex:1; min-width:140px; text-align:center; background:rgba(56,189,248,.12);
+border:1px solid var(--blue); color:var(--blue); text-decoration:none; padding:10px;
+border-radius:10px; font-size:.85rem; font-weight:700}
+.btn-sos{width:100%; background:var(--red); color:#fff; font-size:1.15rem; padding:16px;
+margin-top:14px; letter-spacing:1px; animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.55)} 50%{box-shadow:0 0 0 14px rgba(248,113,113,0)}}
+.sos-note{font-size:.75rem; color:var(--muted); margin-top:10px; line-height:1.5}
+</style>
+</head>
+<body>
+
+<div id="splash">
+<svg class="heart" viewBox="0 0 512 512"><path d="M256 400c-96-72-152-128-152-192a88 88 0 0 1 152-60 88 88 0 0 1 152 60c0 64-56 120-152 192z" fill="#f87171"/><path d="M140 250h50l25-50 40 90 30-60h87" stroke="#fff" stroke-width="22" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<h1>Re<span>-</span>Late</h1>
+<p>Tu calculadora de riesgo cardiovascular, siempre contigo. Funciona sin internet.</p>
+<div class="firm">Diseño: Miguel Ángel Layunta López</div>
+</div>
+
+<header>
+<h1>Re<span>-</span>Late</h1>
+<div class="subtitle">Calculadora de riesgo cardiovascular</div>
+<div class="author">Diseño: Miguel Ángel Layunta López</div>
+</header>
+
+<!-- ============ TAB: CALCULADORA ============ -->
+<section id="tab-calc" class="tab-content active">
+<div class="card">
+<h2>Datos</h2>
+<div class="row">
+<div><label for="edad">Edad (años)</label><input type="number" id="edad" min="1" max="110" value="50"></div>
+<div><label for="sexo">Sexo</label>
+<select id="sexo"><option value="H">Hombre</option><option value="M">Mujer</option></select></div>
+</div>
+<div class="row">
+<div><label for="sis">T.A. sistólica</label><input type="number" id="sis" min="70" max="260" value="130"></div>
+<div><label for="dias">T.A. diastólica</label><input type="number" id="dias" min="40" max="160" value="85"></div>
+</div>
+<div class="row">
+<div><label for="peso">Peso (kg)</label><input type="number" id="peso" min="20" max="300" value="78"></div>
+<div><label for="talla">Talla (cm)</label><input type="number" id="talla" min="80" max="250" value="172"></div>
+</div>
+<div class="row">
+<div><label for="col">Colesterol (mg/dL)</label><input type="number" id="col" min="50" max="500" value="210"></div>
+<div><label for="gluc">Glucosa (mg/dL)</label><input type="number" id="gluc" min="40" max="500" value="105"></div>
+</div>
+<label for="cint">Perímetro de cintura (cm)</label>
+<input type="number" id="cint" min="40" max="200" value="100">
+<div class="check">
+<input type="checkbox" id="tabaco">
+<label for="tabaco">Fuma actualmente</label>
+</div>
+<div id="boxAnios" style="display:none">
+<label>Años fumando: <span class="slider-val" id="valAnios">10</span></label>
+<input type="range" id="anios" min="1" max="50" value="10">
+</div>
+<div class="btns">
+<button class="btn-calc" id="btnCalc">Calcular</button>
+<button class="btn-pdf" id="btnPdf">PDF</button>
+<button class="btn-reset" id="btnReset">Reset</button>
+</div>
+</div>
+
+<div class="card gauge-wrap">
+<svg viewBox="0 0 320 170" id="gauge">
+<path d="M20 150 A140 140 0 0 1 106.7 28.8" stroke="#4ade80" stroke-width="18" fill="none" stroke-linecap="round"/>
+<path d="M106.7 28.8 A140 140 0 0 1 213.3 28.8" stroke="#fbbf24" stroke-width="18" fill="none"/>
+<path d="M213.3 28.8 A140 140 0 0 1 300 150" stroke="#f87171" stroke-width="18" fill="none" stroke-linecap="round"/>
+<line id="needle" x1="160" y1="150" x2="160" y2="40" stroke="#e2e8f0" stroke-width="4" stroke-linecap="round"/>
+<circle cx="160" cy="150" r="9" fill="#e2e8f0"/>
+</svg>
+<div class="score-big" id="scoreBig">—</div>
+<div class="badge b-green" id="badge">Introduce tus datos</div>
+<div class="imc-line" id="imcLine"></div>
+<div class="desc" id="desc"></div>
+</div>
+
+<div class="card">
+<h2>Desglose</h2>
+<div id="detalle">Pulsa <b>Calcular</b> para ver la aportación de cada factor.</div>
+</div>
+
+<!-- ===== NUEVO: SOS 112 + GEOLOCALIZACIÓN ===== -->
+<div class="card sos-card">
+<h2>🆘 Emergencias 112</h2>
+<div class="geo-status" id="geoStatus">Pulsa «Obtener ubicación» para poder compartir tu posición al llamar al 112.</div>
+<div class="btns">
+<button class="btn-calc" id="btnGeo">📍 Obtener ubicación</button>
+<button class="btn-reset" id="btnGeoClear" style="flex:0 0 72px">Borrar</button>
+</div>
+<div class="geo-links" id="geoLinks">
+<a id="lnkMaps" href="#" target="_blank" rel="noopener">🗺️ Ver en Google Maps</a>
+<a id="lnkOsm" href="#" target="_blank" rel="noopener">🌍 Ver en OpenStreetMap</a>
+</div>
+<button class="btn-sos" id="btnSos">📞 LLAMAR AL 112</button>
+<div class="sos-note" id="sosNote">El 112 es el número único de emergencias en toda la UE. Funciona incluso sin SIM ni cobertura de tu operador.</div>
+</div>
+</section>
+
+<!-- ============ TAB: HISTORIAL ============ -->
+<section id="tab-hist" class="tab-content">
+<div class="card chart-card">
+<h2>Evolución</h2>
+<div class="chart-legend">
+<span class="lg"><i style="background:#f87171"></i>Riesgo</span>
+<span class="lg"><i style="background:#38bdf8"></i>IMC</span>
+<span class="lg"><i style="background:#4ade80"></i>Cintura</span>
+</div>
+<svg id="chartEvo" viewBox="0 0 320 180" preserveAspectRatio="none"></svg>
+</div>
+<div class="card">
+<h2>Mediciones guardadas</h2>
+<div id="histList"></div>
+<button id="btnBorrarHist">Borrar todo el historial</button>
+</div>
+</section>
+
+<!-- ============ TAB: CONSEJOS ============ -->
+<section id="tab-tips" class="tab-content">
+<div class="tips-grid">
+<div class="tip-card"><div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div>
+<div class="tip-text"><h3>Actividad física</h3><p>Al menos <span class="highlight">150 min/semana</span> de ejercicio moderado reduce el riesgo de forma medible.</p></div></div>
+<div class="tip-card"><div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6C19 16.6 12 21 12 21z"/></svg></div>
+<div class="tip-text"><h3>Deja de fumar</h3><p>Es el factor que <span class="highlight">más puntos resta</span> de tu riesgo. A los 15 años sin fumar, el riesgo se aproxima al de un no fumador.</p></div></div>
+<div class="tip-card"><div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg></div>
+<div class="tip-text"><h3>Colesterol y glucosa</h3><p>Objetivos orientativos: colesterol <span class="highlight">&lt; 200</span> y glucosa en ayunas <span class="highlight">&lt; 100</span> mg/dL.</p></div></div>
+<div class="tip-card"><div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></div>
+<div class="tip-text"><h3>Tensión arterial</h3><p>Mantén la sistólica <span class="highlight">&lt; 130</span>. Controlarla es gratis y salva vidas.</p></div></div>
+</div>
+<div class="link-card">
+<h3>Enlaces de interés</h3>
+<ul class="link-list">
+<li><a href="https://www.escardio.org/" target="_blank" rel="noopener">🔗 Sociedad Europea de Cardiología</a></li>
+<li><a href="https://www.americanheart.org/" target="_blank" rel="noopener">🔗 American Heart Association</a></li>
+<li><a href="https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/cardiologia/home.htm" target="_blank" rel="noopener">🔗 Ministerio de Sanidad · Salud cardiovascular</a></li>
+<li><a href="https://www.who.int/health-topics/cardiovascular-diseases" target="_blank" rel="noopener">🔗 OMS · Enfermedades cardiovasculares</a></li>
+</ul>
+</div>
+</section>
+
+<div class="tabbar">
+<button class="tab-btn active" data-tab="tab-calc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M14 10h2M8 14h2M14 14h2M8 18h2M14 18h2"/></svg>Calculadora</button>
+<button class="tab-btn" data-tab="tab-hist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Historial</button>
+<button class="tab-btn" data-tab="tab-tips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/><path d="M9 21h6M10 17v4M14 17v4"/></svg>Consejos</button>
+</div>
+
+<div id="installBanner">
+<span>¿Instalar <b>Re-Late</b> sin conexión?</span>
+<button id="btnInstall">Instalar</button>
+<button id="btnCloseInstall" style="background:var(--line);color:var(--muted)">✕</button>
+</div>
+
+<div id="report"></div>
+
+<footer>Re-Late · Herramienta orientativa, no sustituye el consejo médico.<br>© Miguel Ángel Layunta López</footer>
+
+<script>
+/* ============================================================
+ Re-Late · lógica de riesgo cardiovascular
+ CORRECCIÓN TABAQUISMO (Opción B):
+ - sGluc  -> SOLO glucosa (antes mezclaba el tabaco)
+ - sTabaco-> factor propio, con peso real (32 / 40 pts)
+ - total  -> suma TODOS los factores (antes se olvidaba sGluc/sTabaco)
+ - umbrales recalibrados al nuevo máximo teórico
+ ============================================================ */
+const MAX_TOTAL = 162;          // 23+6+26+20+22+25+40
+const TH_LOW = 45, TH_MID = 89; // ~28% y ~55% del máximo
+
+const $ = (id)=>document.getElementById(id);
+const num = (id)=>{const v=parseFloat($(id).value); return isNaN(v)?0:v;};
+
+/* --- baremos por factor --- */
+function sEdad(e){ if(e<15)return 0; if(e<25)return 2; if(e<35)return 4; if(e<45)return 7;
+if(e<55)return 11; if(e<65)return 15; if(e<75)return 19; return 23; }
+function sSexo(s){ return s==='H'?6:3; }
+function sTA(sis){ if(sis<120)return 0; if(sis<130)return 4; if(sis<140)return 8;
+if(sis<160)return 14; if(sis<180)return 20; return 26; }
+function imcCalc(p,t){ if(!p||!t)return 0; return p/Math.pow(t/100,2); }
+function sIMC(imc){ if(imc<25)return 0; if(imc<30)return 8; if(imc<35)return 14; return 20; }
+function sCol(c){ if(c<200)return 0; if(c<240)return 8; if(c<280)return 16; return 22; }
+function sGluc(g){ if(g<100)return 0; if(g<126)return 12; return 25; }      // limpia
+function sTabaco(fuma, anios){ if(!fuma) return 0; return anios>=15 ? 40 : 32; } // factor propio
+
+function tagIMC(imc){
+if(imc<18.5) return ['BAJO','#fbbf24'];
+if(imc<25)   return ['NORMAL','#4ade80'];
+if(imc<30)   return ['SOBREPESO','#fbbf24'];
+if(imc<35)   return ['OBESIDAD I','#f87171'];
+return ['OBESIDAD II+','#f87171'];
+}
+
+let ultimo = null;
+
+function calcular(save){
+const edad=num('edad'), sexo=$('sexo').value, sis=num('sis'), dias=num('dias'),
+      peso=num('peso'), talla=num('talla'), col=num('col'), gluc=num('gluc'),
+      cint=num('cint'), fuma=$('tabaco').checked, anios=num('anios');
+const imc = imcCalc(peso,talla);
+
+const pEdad=sEdad(edad), pSexo=sSexo(sexo), pTA=sTA(sis), pIMC=sIMC(imc),
+      pCol=sCol(col), pGluc=sGluc(gluc), pTab=sTabaco(fuma,anios);
+
+// >>> aquí está la corrección: total suma TODO, incluido glucosa y tabaco
+const total = pEdad+pSexo+pTA+pIMC+pCol+pGluc+pTab;
+
+// gauge
+const frac = Math.min(total,MAX_TOTAL)/MAX_TOTAL;
+const ang = (180-frac*180)*Math.PI/180;
+$('needle').setAttribute('x2', (160+110*Math.cos(ang)).toFixed(1));
+$('needle').setAttribute('y2', (150-110*Math.sin(ang)).toFixed(1));
+$('scoreBig').textContent = total + ' / ' + MAX_TOTAL;
+
+const badge=$('badge');
+let nivel, desc;
+if(total<=TH_LOW){ nivel='RIESGO BAJO'; badge.className='badge b-green';
+  desc='Tu perfil cardiovascular es bajo. Mantén hábitos saludables y revisa los datos cada 3-6 meses.'; }
+else if(total<=TH_MID){ nivel='RIESGO MODERADO'; badge.className='badge b-amber';
+  desc='Hay factores mejorables. Actúa sobre los que más puntúan y consulta con tu médico.'; }
+else { nivel='RIESGO ALTO'; badge.className='badge b-red';
+  desc='Riesgo elevado. Te recomiendo pedir cita con tu médico para una valoración integral.'; }
+badge.textContent = nivel;
+$('desc').textContent = desc;
+
+const [t,c]=tagIMC(imc);
+$('imcLine').innerHTML = 'IMC: <b>'+imc.toFixed(1)+'</b> <span class="imc-tag" style="background:'+c+'">'+t+'</span>';
+
+$('detalle').innerHTML = [
+  ['Edad',pEdad], ['Sexo',pSexo], ['Tensión arterial',pTA], ['IMC',pIMC],
+  ['Colesterol',pCol], ['Glucosa',pGluc], ['Tabaquismo',pTab]
+].map(([n,p])=>'<div><b>'+n+':</b> '+(p>0?'+'+p+' pts':'0 pts')+'</div>').join('')
+ + '<div style="margin-top:8px;border-top:1px solid var(--line);padding-top:8px"><b>TOTAL:</b> '+total+' pts → '+nivel+'</div>';
+
+ultimo = {fecha:new Date().toISOString(), total, imc:+imc.toFixed(1), cint};
+if(save) guardar(ultimo);
+}
+
+/* --- historial --- */
+const HKEY='relate_hist';
+function leer(){ try{return JSON.parse(localStorage.getItem(HKEY))||[]}catch(e){return[]} }
+function guardar(rec){ const h=leer(); h.push(rec); localStorage.setItem(HKEY,JSON.stringify(h.slice(-50))); pintarHist(); }
+function borrarRec(i){ const h=leer(); h.splice(i,1); localStorage.setItem(HKEY,JSON.stringify(h)); pintarHist(); }
+function borrarTodo(){ if(confirm('¿Borrar todo el historial?')){ localStorage.removeItem(HKEY); pintarHist(); } }
+
+function pintarHist(){
+const h=leer(), cont=$('histList');
+if(!h.length){ cont.innerHTML='<div style="color:var(--muted);font-size:.85rem">Aún no hay mediciones.</div>'; drawChart(h); return; }
+cont.innerHTML = h.map((r,i)=>{
+  const cls = r.total<=TH_LOW?'b-green':r.total<=TH_MID?'b-amber':'b-red';
+  const d = new Date(r.fecha).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  return '<div class="hist-item"><div class="hist-dot '+cls+'">'+r.total+'</div>'+
+    '<div class="hist-info"><div class="h-score">IMC '+r.imc+' · Cintura '+r.cint+' cm</div>'+
+    '<div class="h-date">'+d+'</div></div>'+
+    '<button class="hist-del" data-i="'+i+'">🗑</button></div>';
+}).join('');
+cont.querySelectorAll('.hist-del').forEach(b=>b.onclick=()=>borrarRec(+b.dataset.i));
+drawChart(h);
+}
+
+/* --- gráfico evolución (3 series normalizadas) --- */
+function drawChart(h){
+const svg=$('chartEvo'); const W=320,H=180,L=28,R=8,T=10,B=22;
+const pts=h.slice(-12); const n=pts.length;
+let out='';
+// grid horizontal + ticks 0/50/100%
+[0,50,100].forEach(p=>{
+  const y=T+(H-T-B)*(1-p/100);
+  out+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+  out+='<text class="tick" x="4" y="'+(y+3)+'">'+p+'%</text>';
+});
+out+='<line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>';
+if(n<1){ svg.innerHTML=out; return; }
+const xAt=i=> L + (n===1?(W-L-R)/2:(W-L-R)*i/(n-1));
+const yAt=v=> T + (H-T-B)*(1-v);
+const series=[
+  {cls:'risk',arr:pts.map(r=>r.total/MAX_TOTAL)},
+  {cls:'imc', arr:pts.map(r=>Math.max(0,Math.min(1,(r.imc-15)/(45-15))))},
+  {cls:'cint',arr:pts.map(r=>Math.max(0,Math.min(1,(r.cint-60)/(130-60))))}
+];
+series.forEach(s=>{
+  const d=s.arr.map((v,i)=>(i?'L':'M')+xAt(i).toFixed(1)+' '+yAt(v).toFixed(1)).join(' ');
+  out+='<path class="line-'+s.cls+'" d="'+d+'"/>';
+  s.arr.forEach((v,i)=>{ out+='<circle class="dot dot-'+s.cls+'" cx="'+xAt(i).toFixed(1)+'" cy="'+yAt(v).toFixed(1)+'" r="3"/>'; });
+});
+svg.innerHTML=out;
+}
+
+/* ============================================================
+   NUEVO: geolocalización + aviso al 112
+   - navigator.geolocation pide permiso expreso al usuario
+   - Requiere HTTPS (o localhost), igual que el service worker
+   - El navegador NO puede enviar la posición al 112 por sí solo:
+     se copia un mensaje con coordenadas + se abre el marcador
+   ============================================================ */
+let geo = null; // {lat, lng, acc}
+const fmtCoord = v => v.toFixed(5);
+
+function geoMsg(){
+  if(!geo) return null;
+  const url = 'https://maps.google.com/?q=' + geo.lat + ',' + geo.lng;
+  return '🆘 EMERGENCIA — Necesito ayuda.\n' +
+         'Ubicación: ' + fmtCoord(geo.lat) + ', ' + fmtCoord(geo.lng) +
+         ' (±' + Math.round(geo.acc) + ' m)\n' + url;
+}
+
+$('btnGeo').onclick = () => {
+  if(!('geolocation' in navigator)){
+    $('geoStatus').textContent = '⚠️ Este navegador no permite geolocalización.';
+    return;
+  }
+  $('geoStatus').textContent = 'Localizando…';
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      geo = {lat:pos.coords.latitude, lng:pos.coords.longitude, acc:pos.coords.accuracy||0};
+      $('geoStatus').innerHTML = '📍 <span class="geo-coords">' + fmtCoord(geo.lat) + ', ' + fmtCoord(geo.lng) +
+        '</span> · precisión ±' + Math.round(geo.acc) + ' m';
+      $('lnkMaps').href = 'https://maps.google.com/?q=' + geo.lat + ',' + geo.lng;
+      $('lnkOsm').href = 'https://www.openstreetmap.org/?mlat=' + geo.lat + '&mlon=' + geo.lng + '#map=17/' + geo.lat + '/' + geo.lng;
+      $('geoLinks').style.display = 'flex';
+      $('sosNote').textContent = '✅ Ubicación lista: se incluirá en el mensaje al llamar al 112 y en el informe PDF.';
+    },
+    err => {
+      const m = {1:'Permiso denegado. Activa la ubicación en los ajustes del navegador.',
+                 2:'Posición no disponible ahora mismo.',
+                 3:'Tiempo de espera agotado. Vuelve a intentarlo.'};
+      $('geoStatus').textContent = '⚠️ ' + (m[err.code] || 'No se pudo obtener la ubicación.');
+    },
+    {enableHighAccuracy:true, timeout:10000, maximumAge:60000}
+  );
+};
+
+$('btnGeoClear').onclick = () => {
+  geo = null;
+  $('geoLinks').style.display = 'none';
+  $('geoStatus').textContent = 'Ubicación borrada.';
+  $('sosNote').textContent = 'El 112 es el número único de emergencias en toda la UE. Funciona incluso sin SIM ni cobertura de tu operador.';
+};
+
+async function copiarTexto(t){
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch(_){}
+    ta.remove(); return ok;
+  }
+}
+
+$('btnSos').onclick = async () => {
+  const msg = geoMsg();
+  if(msg){
+    const ok = await copiarTexto(msg);
+    $('sosNote').textContent = ok
+      ? '✅ Mensaje con tus coordenadas copiado. Ábrelo/pégalo si el operador te lo pide.'
+      : 'No se pudo copiar: dicta tus coordenadas al operador.';
+  } else {
+    $('sosNote').textContent = '💡 Obtén primero tu ubicación para poder pasar las coordenadas al operador.';
+  }
+  window.location.href = 'tel:112'; // abre el marcador con el 112 (móvil)
+};
+
+/* --- PDF / impresión (ahora incluye ubicación si está disponible) --- */
+function generarPDF(){
+if(!ultimo){ alert('Calcula primero tu riesgo.'); return; }
+const d=new Date(ultimo.fecha);
+const filaGeo = geo
+  ? '<tr><th>Ubicación</th><td>'+fmtCoord(geo.lat)+', '+fmtCoord(geo.lng)+' (±'+Math.round(geo.acc)+' m)</td></tr>'
+  : '';
+$('report').innerHTML='<h2>Re-Late · Informe de riesgo cardiovascular</h2>'+
+  '<p>Fecha: '+d.toLocaleString('es-ES')+' — Diseño: Miguel Ángel Layunta López</p>'+
+  '<table><tr><th>Resultado</th><td>'+ultimo.total+' / '+MAX_TOTAL+'</td></tr>'+
+  '<tr><th>IMC</th><td>'+ultimo.imc+'</td></tr>'+
+  '<tr><th>Cintura</th><td>'+ultimo.cint+' cm</td></tr>'+filaGeo+'</table>'+
+  '<p style="font-size:.8rem">Herramienta orientativa; no sustituye el consejo médico.</p>';
+window.print();
+}
+
+/* --- tabs --- */
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+b.classList.add('active'); $(b.dataset.tab).classList.add('active');
+});
+
+/* --- slider años tabaco --- */
+$('tabaco').onchange=()=>{ $('boxAnios').style.display=$('tabaco').checked?'block':'none'; };
+$('anios').oninput=()=>{ $('valAnios').textContent=$('anios').value; };
+
+/* --- botones --- */
+$('btnCalc').onclick=()=>calcular(true);
+$('btnPdf').onclick=generarPDF;
+$('btnReset').onclick=()=>{
+['edad','sis','dias','peso','talla','col','gluc','cint','anios'].forEach(id=>$(id).value='');
+$('tabaco').checked=false; $('boxAnios').style.display='none';
+$('scoreBig').textContent='—'; $('badge').className='badge b-green'; $('badge').textContent='Introduce tus datos';
+$('desc').textContent=''; $('imcLine').innerHTML='';
+$('detalle').innerHTML='Pulsa <b>Calcular</b> para ver la aportación de cada factor.';
+$('needle').setAttribute('x2','160'); $('needle').setAttribute('y2','40');
+};
+
+/* --- install banner --- */
+let deferred=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferred=e; $('installBanner').style.display='flex'; });
+$('btnInstall').onclick=async()=>{ if(!deferred)return; deferred.prompt(); await deferred.userChoice; $('installBanner').style.display='none'; };
+$('btnCloseInstall').onclick=()=>$('installBanner').style.display='none';
+
+/* --- splash --- */
+window.addEventListener('load',()=>setTimeout(()=>$('splash').classList.add('hide'),1400));
+
+/* --- service worker --- */
+if('serviceWorker' in navigator &&
+ (location.protocol==='https:' || ['localhost','127.0.0.1'].includes(location.hostname))){
+window.addEventListener('load',()=>{
+  navigator.serviceWorker.register('./sw.js')
+    .then(reg=>{ reg.update(); setInterval(()=>reg.update(),60000); })
+    .catch(err=>console.warn('SW no registrado:',err));
+});
+}
+
+  /* --- init --- */
+  calcular(false);
+  pintarHist();
+
+  /* --- NUEVO: acceso directo ?sos desde el manifest --- */
+  if(location.search.includes('sos')){
+    setTimeout(()=>document.querySelector('.sos-card')?.scrollIntoView({behavior:'smooth'}),1500);
+  }
+  </script>
+  </body>
+  </html>
