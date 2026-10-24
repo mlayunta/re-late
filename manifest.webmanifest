@@ -1,0 +1,50 @@
+{
+  "name": "Re-Late · Riesgo Cardiovascular",
+  "short_name": "Re-Late",
+  "description": "Calculadora de riesgo cardiovascular offline con historial, evolución y acceso rápido al 112. Diseño: Miguel Ángel Layunta López.",
+  "author": "Miguel Ángel Layunta López",
+  "lang": "es",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergencia 112",
+      "short_name": "112",
+      "description": "Abre Re-Late y salta directo al botón de emergencias",
+      "url": "./index.html?sos",
+      "icons": [
+        {
+          "src": "icons/icon-180.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
